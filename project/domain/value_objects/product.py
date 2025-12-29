@@ -95,14 +95,6 @@ class Eligibility(BaseModel):
     }
 
 
-def validate_image_url(url: str) -> str:
-    pattern = r'^https://[^/]+(?:/[^/]+)*/(?P<product_id>\d+)_\d+\.jpg$'
-    match = re.match(pattern, url)
-    if not match:
-        raise ValueError(f"Invalid image URL: {url}")
-    return url
-
-
 @dataclass(frozen=True)
 class MediaMainPhoto:
     mobile: str
@@ -110,9 +102,17 @@ class MediaMainPhoto:
     desktop: str
 
     def __post_init__(self):
-        object.__setattr__(self, "mobile", validate_image_url(self.mobile))
-        object.__setattr__(self, "tablet", validate_image_url(self.tablet))
-        object.__setattr__(self, "desktop", validate_image_url(self.desktop))
+        object.__setattr__(self, "mobile", self.validate_image_url(self.mobile))
+        object.__setattr__(self, "tablet", self.validate_image_url(self.tablet))
+        object.__setattr__(self, "desktop", self.validate_image_url(self.desktop))
+
+    @staticmethod
+    def validate_image_url(url: str) -> str:
+        pattern = r'^https://[^/]+(?:/[^/]+)*/(?P<product_id>\d+)_\d+\.jpg$'
+        match = re.match(pattern, url)
+        if not match:
+            raise ValueError(f"Invalid image URL: {url}")
+        return url
 
 
 class Brand(BaseModel):

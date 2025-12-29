@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from urllib.parse import urlparse, parse_qs
 
-
 from pydantic import BaseModel, field_validator
 
 
@@ -31,6 +30,14 @@ class UrlParts:
     domain: str
     segments: tuple[str, ...]
     query: dict[str, str]
+
+    # def with_page(self, page: int) -> "UrlParts":
+    #     """Возвращает новый UrlParts с обновлённым параметром page."""
+    #     if page < 1:
+    #         raise ValueError("page must be >= 1")
+    #     new_query = dict(self.query)
+    #     new_query["page"] = str(page)
+    #     return UrlParts(domain=self.domain, segments=self.segments, query=new_query)
 
     @classmethod
     def from_url(cls, url: str) -> "UrlParts":

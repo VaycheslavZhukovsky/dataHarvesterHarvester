@@ -58,7 +58,6 @@ def test_url_with_query():
 def test_page_parameter_removal():
     url = "https://example.com/list?page=1&sort=asc"
     parts = UrlParts.from_url(url)
-    # page=1 должно быть удалено
     assert parts.query == {"sort": "asc"}
     assert "page" not in parts.query
 
