@@ -1,0 +1,28 @@
+# Виртуальное окружение
+venv/
+prompt/
+
+# Кэш и байткод
+__pycache__/
+*.pyc
+
+# Логи
+*.log
+
+# Настройки IDE
+.idea/
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+project/infrastructure/cache
+project/cache_back
+project/profile
+
+project/config.py
+project/cookies.txt
+
+project/tests/data
+app/.env
+*.html
