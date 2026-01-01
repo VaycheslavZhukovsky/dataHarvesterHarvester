@@ -16,15 +16,15 @@ class ProductPriceCategory(BaseModel):
 class Price(BaseModel):
     additional_as_main: bool
     currency: str
-    main_price: int
-    previous_price: Optional[int]
+    main_price: float
+    previous_price: Optional[float]
     main_uom: str
     main_uom_rus: str
-    additional_price: Optional[int]
-    previous_additional_price: Optional[int]
-    additional_uom: Optional[int]
-    additional_uom_rus: Optional[int]
-    discount_percent: Optional[int]
+    additional_price: Optional[float]
+    previous_additional_price: Optional[float]
+    additional_uom: Optional[str]
+    additional_uom_rus: Optional[str]
+    discount_percent: Optional[float]
     step: int
 
     model_config = {
@@ -108,7 +108,8 @@ class MediaMainPhoto:
 
     @staticmethod
     def validate_image_url(url: str) -> str:
-        pattern = r'^https://[^/]+(?:/[^/]+)*/(?P<product_id>\d+)_\d+\.jpg$'
+        pattern = re.compile(r'^https://[^/]+(?:/[^/]+)*/(?P<product_id>\d+)(?:_[^.]+)?\.(?:jpg|png)$')
+
         match = re.match(pattern, url)
         if not match:
             raise ValueError(f"Invalid image URL: {url}")
@@ -116,7 +117,7 @@ class MediaMainPhoto:
 
 
 class Brand(BaseModel):
-    name: str
+    name: Optional[str]
 
     model_config = {
         "frozen": True,
@@ -190,7 +191,7 @@ class CompareCategory(BaseModel):
 
 
 class Category(BaseModel):
-    category: str
+    category: str | None
 
     model_config = {
         "frozen": True

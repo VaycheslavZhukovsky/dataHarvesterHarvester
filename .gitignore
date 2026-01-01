@@ -1,6 +1,5 @@
 # Виртуальное окружение
 venv/
-prompt/
 
 # Кэш и байткод
 __pycache__/
@@ -19,10 +18,10 @@ Thumbs.db
 project/infrastructure/cache
 project/cache_back
 project/profile
-
+profile
+project/infrastructure/cookies.txt
 project/config.py
-project/cookies.txt
 
 project/tests/data
-app/.env
 *.html
+

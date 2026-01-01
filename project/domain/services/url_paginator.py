@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from urllib.parse import urlencode, urlunparse
 from typing import Optional
 
 from project.domain.value_objects.html_obj import UrlParts
@@ -27,15 +26,8 @@ class UrlPaginator:
         new_query = dict(self.parts.query)
         new_query["page"] = str(page)
 
-        url = urlunparse((
-            "https",
-            self.parts.domain,
-            "/" + "/".join(self.parts.segments),
-            "",
-            urlencode(new_query),
-            ""
-        ))
-        return url
+        url = self.parts.with_page(page)
+        return url.to_url()
 
     def mark_processed(self, page: Optional[int] = None) -> "UrlPaginator":
         """

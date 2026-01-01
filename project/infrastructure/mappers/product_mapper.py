@@ -4,7 +4,8 @@ from project.domain.value_objects.product import ProductPriceCategory, Price, Pr
 
 
 class ProductMapper:
-    def to_entity(self, raw: dict) -> Product:
+    @staticmethod
+    def to_entity(raw: dict) -> Product:
         return Product(
             product_price_category=ProductPriceCategory(category=raw["productPriceCategory"]),
             price=Price(**raw["price"]),
@@ -20,3 +21,7 @@ class ProductMapper:
             compare_category=CompareCategory(**raw["compareCategory"]),
             category=Category(category=raw["category"])
         )
+
+    @staticmethod
+    def to_entities(rows: list[dict]) -> list[Product]:
+        return [ProductMapper.to_entity(row) for row in rows]

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, urlunparse, urlencode
 
 from pydantic import BaseModel, field_validator
 
@@ -31,14 +31,6 @@ class UrlParts:
     segments: tuple[str, ...]
     query: dict[str, str]
 
-    # def with_page(self, page: int) -> "UrlParts":
-    #     """Возвращает новый UrlParts с обновлённым параметром page."""
-    #     if page < 1:
-    #         raise ValueError("page must be >= 1")
-    #     new_query = dict(self.query)
-    #     new_query["page"] = str(page)
-    #     return UrlParts(domain=self.domain, segments=self.segments, query=new_query)
-
     @classmethod
     def from_url(cls, url: str) -> "UrlParts":
         parsed = urlparse(url)
@@ -68,6 +60,25 @@ class UrlParts:
             segments=segments,
             query=query
         )
+
+    def with_page(self, page: int) -> "UrlParts":
+        """Возвращает новый UrlParts с обновлённым параметром page."""
+        if page < 1:
+            raise ValueError("page must be >= 1")
+        new_query = dict(self.query)
+        new_query["page"] = str(page)
+        return UrlParts(domain=self.domain, segments=self.segments, query=new_query)
+
+    def to_url(self, scheme: str = "https") -> str:
+        """Генерирует строку URL из частей."""
+        return urlunparse((
+            scheme,
+            self.domain,
+            "/" + "/".join(self.segments),
+            "",
+            urlencode(self.query),
+            ""
+        ))
 
     def __str__(self):
         scheme = "https://"
