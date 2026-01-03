@@ -1,40 +1,41 @@
-from project.domain.interfaces.page_loader import IPageLoader
-from project.domain.interfaces.cookies_manager import ICookieProvider
-from project.domain.interfaces.product_extractor import IProductsExtractor
-from project.domain.services.url_paginator import UrlPaginator
-from project.infrastructure.mappers.product_mapper import ProductMapper
+from functools import reduce
+
+from project.domain.services.page_state_service import PageStateService
+from project.domain.services.the_number_of_products_extractor import get_the_number_of_products
+from project.infrastructure.repositories.fake_page_state_repository import FakePageStateRepository
 
 
-class ScrapePageUseCase:
-    """
-    Use-case: загрузить страницу, извлечь продукты, преобразовать в сущности,
-    обновить состояние пагинации.
-    """
-
-    def __init__(
-            self,
-            paginator: UrlPaginator,
-            loader: IPageLoader,
-            extractor: IProductsExtractor,
-            mapper: ProductMapper,
-    ):
-        self.paginator = paginator
+class ScrapeCatalogUseCase:
+    def __init__(self, loader, extractor, mapper, paginator_factory):
         self.loader = loader
         self.extractor = extractor
         self.mapper = mapper
+        self.paginator_factory = paginator_factory
 
-    async def execute(self):
-
-        url = self.paginator.next_url()
+    async def execute(self, url: str):
+        repo = FakePageStateRepository()
+        service = PageStateService(repository=repo)
+        all_pages, processed = service.get_loaded_pages(url)
 
         await self.loader.start()
-        html = await self.loader.load_dom(url=url, timeout=80000)
+        if not processed:
+            html = await self.loader.load_dom(url)
+            total_pages = int(get_the_number_of_products(html) / 30)
+            paginator = self.paginator_factory.create(url, total_pages)
+        else:
+            paginator = self.paginator_factory.create(url, all_pages)
+            paginator = reduce(lambda acc, i: acc.mark_processed(i), processed, paginator)
+
+        print(paginator)
+
+        while paginator.next_url():
+            page_url = paginator.next_url()
+            html = await self.loader.load_dom(page_url)
+
+            products_raw = self.extractor.create_products_list_from_str(html)
+            entities = self.mapper.to_entities(products_raw)
+
+            paginator = paginator.mark_processed()
+            yield entities
+
         await self.loader.close()
-
-        products_raw = self.extractor.create_products_list_from_str(html)
-
-        entities = self.mapper.to_entities(products_raw)
-
-        self.paginator = self.paginator.mark_processed()
-
-        return entities, self.paginator
