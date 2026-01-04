@@ -24,6 +24,7 @@ profile
 project/infrastructure/cookies.txt
 project/config.py
 
+project/infrastructure/playwright/profile
 project/tests/data
 *.html
 

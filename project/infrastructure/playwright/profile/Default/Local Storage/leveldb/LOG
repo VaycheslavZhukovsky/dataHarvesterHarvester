@@ -1,8 +1,0 @@
-2025/12/31-07:05:52.214 ee0 Reusing MANIFEST D:\dataHarvester\project\infrastructure\playwright\profile\Default\Local Storage\leveldb/MANIFEST-000001
-2025/12/31-07:05:52.219 ee0 Recovering log #3
-2025/12/31-07:05:52.220 ee0 Level-0 table #3: started
-2025/12/31-07:05:52.251 ee0 Level-0 table #3: 14754 bytes OK
-2025/12/31-07:05:52.251 ee0 Recovering log #4
-2025/12/31-07:05:52.251 ee0 Reusing old log D:\dataHarvester\project\infrastructure\playwright\profile\Default\Local Storage\leveldb/000004.log 
-2025/12/31-07:05:52.291 ee0 Delete type=0 #3
-2025/12/31-07:05:52.292 ee0 Delete type=2 #5
