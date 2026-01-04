@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List, Union
 
-from project.domain.services.products_extractor import ProductsExtractor
+from project.infrastructure.parsers.products_extractor import ProductsExtractor
 from project.infrastructure.adapters.file_html_reader import FileHtmlReader
 
 

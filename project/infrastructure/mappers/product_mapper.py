@@ -1,5 +1,5 @@
 from project.domain.entities.product import Product
-from project.domain.value_objects.product import ProductPriceCategory, Price, ProductLink, DisplayedName, Eligibility, \
+from project.domain.value_objects.product import ProductPriceCategory, Price, ProductLink, DisplayedName, \
     MediaMainPhoto, Brand, Source, ProductId, MeasurementData, Characteristics, CompareCategory, Category
 
 
@@ -11,7 +11,6 @@ class ProductMapper:
             price=Price(**raw["price"]),
             product_link=ProductLink(raw["productLink"]),
             displayed_name=DisplayedName(name=raw["displayedName"]),
-            eligibility=Eligibility(**raw["eligibility"]),
             media_main_photo=MediaMainPhoto(**raw["mediaMainPhoto"]),
             brand=Brand(name=raw["brand"]),
             source=Source(name=raw["source"]),

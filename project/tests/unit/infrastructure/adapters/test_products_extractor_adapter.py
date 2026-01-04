@@ -1,4 +1,4 @@
-from project.domain.services.products_extractor import ProductsExtractor
+from project.infrastructure.parsers.products_extractor import ProductsExtractor
 from project.infrastructure.adapters.products_extractor_adapter import ProductsExtractorAdapter
 
 

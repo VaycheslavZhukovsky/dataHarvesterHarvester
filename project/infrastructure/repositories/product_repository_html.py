@@ -3,7 +3,7 @@ from pathlib import Path
 from project.domain.entities.product import Product
 from project.domain.repositories.product_repositories import ProductRepository
 from project.infrastructure.mappers.product_mapper import ProductMapper
-from project.domain.services.products_extractor import ProductsExtractor
+from project.infrastructure.parsers.products_extractor import ProductsExtractor
 
 
 class ProductRepositoryHtml(ProductRepository):

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from project.domain.value_objects.product import ProductId, Price, ProductPriceCategory, ProductLink, DisplayedName, \
-    Eligibility, MediaMainPhoto, Brand, Source, MeasurementData, Characteristics, Category, CompareCategory
+    MediaMainPhoto, Brand, Source, MeasurementData, Characteristics, Category, CompareCategory
 
 
 @dataclass
@@ -12,7 +12,7 @@ class Product:
     category: Category
     brand: Brand
     displayed_name: DisplayedName
-    eligibility: Eligibility
+    # eligibility: Eligibility | None
     source: Source
     measurement_data: MeasurementData
     characteristics: Characteristics

@@ -1,7 +1,7 @@
 import pytest
 
 from project.domain.entities.product import Product
-from project.domain.value_objects.product import ProductPriceCategory, Price, ProductLink, DisplayedName, Eligibility, \
+from project.domain.value_objects.product import ProductPriceCategory, Price, ProductLink, DisplayedName, \
     MediaMainPhoto, Brand, Source, ProductId, MeasurementData, Characteristics, CompareCategory, Category
 from project.tests.data.product import product
 
@@ -13,7 +13,6 @@ def product_data():
         "price": Price(**product["price"]),
         "product_link": ProductLink(product["productLink"]),
         "displayed_name": DisplayedName(name=product["displayedName"]),
-        "eligibility": Eligibility(**product["eligibility"]),
         "media_main_photo": MediaMainPhoto(**product["mediaMainPhoto"]),
         "brand": Brand(name=product["brand"]),
         "source": Source(name=product["source"]),

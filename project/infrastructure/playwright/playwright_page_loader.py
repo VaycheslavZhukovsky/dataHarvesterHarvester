@@ -42,30 +42,3 @@ class PlaywrightPageLoader(IPageLoader):
         if self._pw:
             await self._pw.stop()
             self._pw = None
-
-
-async def main():
-    url = "https://lemanapro.ru/catalogue/oboi-pod-pokrasku/"
-
-    root = Path(__file__).resolve().parent.parent
-    path_to_the_cache = root / "cookies.txt"
-
-    cookies_obj = CookiesManager().build(path_to_the_cache)
-
-    loader = PlaywrightPageLoader(cookies=cookies_obj.cookies)
-
-    await loader.start()
-    html = await loader.load_dom(url)
-    await loader.close()
-
-    print(html)
-
-
-if __name__ == "__main__":
-
-    import asyncio
-    from pathlib import Path
-
-    from project.infrastructure.playwright.cookies_manager import CookiesManager
-
-    asyncio.run(main())

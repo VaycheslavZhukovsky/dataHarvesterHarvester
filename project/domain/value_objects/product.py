@@ -83,18 +83,6 @@ class DisplayedName(BaseModel):
         return v
 
 
-class Eligibility(BaseModel):
-    home_delivery_eligible: Optional[bool] = Field(..., alias="homeDeliveryEligible")
-    relay_point_eligible: Optional[bool] = Field(..., alias="relayPointEligible")
-    store_delivery_eligible: Optional[bool] = Field(..., alias="storeDeliveryEligible")
-    web_eligible: Optional[bool] = Field(..., alias="webEligible")
-
-    model_config = {
-        "frozen": True,
-        "populate_by_name": True
-    }
-
-
 @dataclass(frozen=True)
 class MediaMainPhoto:
     mobile: str

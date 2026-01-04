@@ -2,7 +2,7 @@ import pytest
 from pydantic import ValidationError
 
 from project.domain.value_objects.product import CompareCategory, CharacteristicItem, Characteristics, Source, Brand, \
-    MediaMainPhoto, Eligibility, Price, ProductPriceCategory, ProductLink, DisplayedName, ProductId, Category, \
+    MediaMainPhoto, Price, ProductPriceCategory, ProductLink, DisplayedName, ProductId, Category, \
     MeasurementData
 from project.tests.data.product import product
 
@@ -136,40 +136,6 @@ def test_displayed_name_frozen():
     displayed_name = DisplayedName(name="Immutable DisplayedName")
     with pytest.raises(ValidationError) as exc_info:
         displayed_name.name = "New Name"
-    assert exc_info.value.errors()[0]['type'] == 'frozen_instance'
-
-
-# -----------------------------
-# Eligibility
-# -----------------------------
-
-@pytest.mark.parametrize(
-    "home,relay,store,web",
-    [
-        tuple(product["eligibility"].values()),
-        (True, True, True, True),
-        (False, False, False, False),
-        (None, None, None, None),
-        (True, False, None, True),
-    ]
-)
-def test_eligibility_creation(home, relay, store, web):
-    eligibility = Eligibility(
-        home_delivery_eligible=home,
-        relay_point_eligible=relay,
-        store_delivery_eligible=store,
-        web_eligible=web
-    )
-    assert eligibility.home_delivery_eligible == home
-    assert eligibility.relay_point_eligible == relay
-    assert eligibility.store_delivery_eligible == store
-    assert eligibility.web_eligible == web
-
-
-def test_eligibility_frozen():
-    eligibility = Eligibility(**product["eligibility"])
-    with pytest.raises(ValidationError) as exc_info:
-        eligibility.home_delivery_eligible = False
     assert exc_info.value.errors()[0]['type'] == 'frozen_instance'
 
 

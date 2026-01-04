@@ -38,7 +38,7 @@ class UrlPaginator:
         if page is None:
             page = self.current_page()
         if page is None:
-            return self  # все страницы обработаны
+            return self
 
         new_state = self.state.add_processed(page)
         return UrlPaginator(parts=self.parts, state=new_state)
