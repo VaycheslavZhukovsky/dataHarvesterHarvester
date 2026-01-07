@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from project.infrastructure.cache_index import CacheIndex
-from project.infrastructure.config import SUBCATEGORIES
+from project.config import SUBCATEGORIES
 from project.infrastructure.factories.paginator_factory import PaginatorFactory
 
 root = Path(__file__).resolve().parent

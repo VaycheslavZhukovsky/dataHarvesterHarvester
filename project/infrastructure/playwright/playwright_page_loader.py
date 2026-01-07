@@ -1,7 +1,7 @@
 from playwright.async_api import async_playwright, Playwright, BrowserContext
 from typing import Optional
 
-from project.domain.interfaces.page_loader import IPageLoader
+from project.domain.interfaces.IPageLoader import IPageLoader
 
 
 class PlaywrightPageLoader(IPageLoader):

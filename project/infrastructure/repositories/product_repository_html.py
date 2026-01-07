@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from project.domain.entities.product import Product
-from project.domain.repositories.product_repositories import ProductRepository
-from project.infrastructure.mappers.product_mapper import ProductMapper
+from project.domain.entities.Product import Product
+from project.domain.repositories.IProductRepository import IProductRepository
+from project.infrastructure.mappers.ProductMapper import ProductMapper
 from project.infrastructure.parsers.products_extractor import ProductsExtractor
 
 
-class ProductRepositoryHtml(ProductRepository):
+class ProductRepositoryHtml(IProductRepository):
     def __init__(self, extractor: ProductsExtractor, mapper: ProductMapper, html_path: Path):
         self.extractor = extractor
         self.mapper = mapper

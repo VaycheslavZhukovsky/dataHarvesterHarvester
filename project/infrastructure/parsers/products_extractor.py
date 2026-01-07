@@ -7,7 +7,7 @@ from project.infrastructure.exceptions.parsing_errors import (
     ProductsDataNotFoundError,
     ProductsDataMalformedError,
 )
-from project.domain.interfaces.product_extractor import IProductsExtractor
+from project.domain.interfaces.IProductsExtractor import IProductsExtractor
 from project.infrastructure.logging.logger_config import setup_logger
 
 logger = setup_logger(__name__)

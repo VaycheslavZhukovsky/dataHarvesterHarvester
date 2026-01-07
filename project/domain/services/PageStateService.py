@@ -11,16 +11,16 @@ class PageStateService:
     def __init__(self, repository: IPageStateRepository):
         self.repository = repository
 
-    def add_url(self, url: str) -> None:
+    async def add_url(self, slug: str, page: int) -> None:
         """
         Добавляет URL в хранилище состояния страниц.
         """
-        self.repository.add_url(url)
+        await self.repository.add_url(slug, page)
 
-    def get_loaded_pages(self, url: str) -> Tuple[int, Tuple[int, ...]]:
+    async def get_loaded_pages(self, slug: str) -> Tuple[int, Tuple[int, ...]]:
         """
         Возвращает:
         - total_pages (заглушка или реальное значение)
         - tuple обработанных страниц
         """
-        return self.repository.get_data_from_category(url)
+        return await self.repository.get_data_from_category(slug)

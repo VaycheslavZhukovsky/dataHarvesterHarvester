@@ -1,63 +1,13 @@
 import asyncio
-from pathlib import Path
+from sqlalchemy.ext.asyncio import create_async_engine
 
-from project.application.use_cases.load_init_page import LoadInitialPageUseCase
-from project.application.use_cases.restore_paginator import RestorePaginatorUseCase
-from project.application.use_cases.scrape_catalog_use_case import ScrapeCatalogUseCase
-from project.application.use_cases.scrape_single_page import ScrapeSinglePageUseCase
-
-from project.domain.services.page_state_service import PageStateService
-from project.domain.services.page_type_detector import PageTypeDetector
-from project.domain.value_objects.html_obj import UrlParts
-
-from project.infrastructure.config import CATEGORIES, SUBCATEGORIES
-from project.infrastructure.factories.paginator_factory import PaginatorFactory
-from project.infrastructure.mappers.product_mapper import ProductMapper
-from project.infrastructure.parsers.products_extractor import ProductsExtractor
-from project.infrastructure.playwright.playwright_page_loader import PlaywrightPageLoader
-from project.infrastructure.repositories.fake_page_state_repository import FakePageStateRepository
-from project.infrastructure.playwright.cookies_manager import CookiesManager
+from project.infrastructure.persistence.db import _get_database_url, metadata
 
 
-async def main():
-    url = "https://lemanapro.ru/catalogue/oboi-pod-pokrasku"
-
-    root = Path(__file__).resolve().parent
-    path_cookies = root / "project" / "infrastructure" / "cookies.txt"
-    path_cache = root / "project" / "infrastructure" / "cache" / "cache.txt"
-
-    cookie_provider = CookiesManager(path_cookies)
-    cookies = cookie_provider.build()
-
-    detector = PageTypeDetector(CATEGORIES, SUBCATEGORIES)
-    parts = UrlParts.from_url(url)
-
-    loader = PlaywrightPageLoader(cookies=cookies)
-    repo = FakePageStateRepository(path_cache)
-    service = PageStateService(repository=repo)
-
-    extractor = ProductsExtractor()
-    mapper = ProductMapper()
-
-    scrape_page_uc = ScrapeSinglePageUseCase(loader, extractor, mapper)
-
-    if detector.detect(parts).name == "SUBCATEGORY":
-        scraper = ScrapeCatalogUseCase(
-            loader=loader,
-            extractor=extractor,
-            mapper=mapper,
-            paginator_factory=PaginatorFactory,
-            page_state_service=service,
-            load_initial_uc=LoadInitialPageUseCase,
-            restore_paginator_uc=RestorePaginatorUseCase,
-            scrape_page_uc=scrape_page_uc,
-        )
-
-        async for entities in scraper.execute(url):
-            print(entities[:3])
-
-        await loader.close()
-
+async def create_tables():
+    engine = create_async_engine(_get_database_url(), echo=True, future=True)
+    async with engine.begin() as conn:
+        await conn.run_sync(metadata.create_all)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(create_tables())

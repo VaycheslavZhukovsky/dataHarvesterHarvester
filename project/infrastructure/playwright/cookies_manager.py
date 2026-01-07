@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from project.domain.interfaces.cookies_manager import ICookieProvider
+from project.domain.interfaces.ICookieProvider import ICookieProvider
 
 
 class CookiesManager(ICookieProvider):

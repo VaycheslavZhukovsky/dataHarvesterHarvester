@@ -14,21 +14,25 @@ class ScrapeCatalogUseCase:
             load_initial_uc,
             restore_paginator_uc,
             scrape_page_uc,
+            url_parts,
     ):
         self.loader = loader
         self.extractor = extractor
         self.mapper = mapper
-        self.paginator_factory = paginator_factory
         self.page_state_service = page_state_service
+        self.paginator_factory = paginator_factory
+        self.url_parts = url_parts
 
-        self.load_initial_uc = load_initial_uc(loader, paginator_factory)
-        self.restore_paginator_uc = restore_paginator_uc(paginator_factory)
+        self.load_initial_uc = load_initial_uc(loader, self.paginator_factory)
+        self.restore_paginator_uc = restore_paginator_uc(self.paginator_factory)
+
         self.scrape_page_uc = scrape_page_uc
 
     async def execute(self, url: str):
         logger.info(f"Starting catalog scraping for URL: {url}")
 
-        all_pages, processed = self.page_state_service.get_loaded_pages(url)
+        category = self.url_parts.from_url(url).segments[1]
+        all_pages, processed = await self.page_state_service.get_loaded_pages(category)
 
         await self.loader.start()
 
@@ -46,7 +50,7 @@ class ScrapeCatalogUseCase:
 
             entities = await self.scrape_page_uc.execute(page_url)
 
-            self.page_state_service.add_url(page_url)
+            await self.page_state_service.add_url(page_url)
             paginator = paginator.mark_processed()
 
             yield entities

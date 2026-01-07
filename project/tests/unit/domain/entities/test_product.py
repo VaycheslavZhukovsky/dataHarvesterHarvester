@@ -1,6 +1,6 @@
 import pytest
 
-from project.domain.entities.product import Product
+from project.domain.entities.Product import Product
 from project.domain.value_objects.product import ProductPriceCategory, Price, ProductLink, DisplayedName, \
     MediaMainPhoto, Brand, Source, ProductId, MeasurementData, Characteristics, CompareCategory, Category
 from project.tests.data.product import product
