@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, model_validator, field_validator
 
 
 class ProductPriceCategory(BaseModel):
-    category: str
+    category: Optional[str]
 
     model_config = {
         "frozen": True
@@ -83,25 +83,14 @@ class DisplayedName(BaseModel):
         return v
 
 
-@dataclass(frozen=True)
-class MediaMainPhoto:
+class MediaMainPhoto(BaseModel):
     mobile: str
     tablet: str
     desktop: str
 
-    def __post_init__(self):
-        object.__setattr__(self, "mobile", self.validate_image_url(self.mobile))
-        object.__setattr__(self, "tablet", self.validate_image_url(self.tablet))
-        object.__setattr__(self, "desktop", self.validate_image_url(self.desktop))
-
-    @staticmethod
-    def validate_image_url(url: str) -> str:
-        pattern = re.compile(r'^https://[^/]+(?:/[^/]+)*/(?P<product_id>\d+)(?:_[^.]+)?\.(?:jpg|png)$')
-
-        match = re.match(pattern, url)
-        if not match:
-            raise ValueError(f"Invalid image URL: {url}")
-        return url
+    model_config = {
+        "frozen": True  # аналог frozen dataclass
+    }
 
 
 class Brand(BaseModel):
@@ -169,8 +158,8 @@ class Characteristics(BaseModel):
 
 
 class CompareCategory(BaseModel):
-    family_id: str = Field(..., alias="familyId", description="ID семьи товара")
-    name: str = Field(..., description="Название категории")
+    family_id: Optional[str] = Field(..., alias="familyId", description="ID семьи товара")
+    name: Optional[str] = Field(..., description="Название категории")
 
     model_config = {
         "frozen": True,

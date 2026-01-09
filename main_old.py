@@ -4,7 +4,7 @@ from pathlib import Path
 from project.application.use_cases.load_init_page import LoadInitialPageUseCase
 from project.application.use_cases.restore_paginator import RestorePaginatorUseCase
 from project.application.use_cases.scrape_catalog_use_case import ScrapeCatalogUseCase
-from project.application.use_cases.scrape_single_page import ScrapeSinglePageUseCase
+from project.application.use_cases.scrape_page import ScrapeAllProductsFromPageUseCase
 
 from project.domain.services.PageStateService import PageStateService
 from project.domain.services.page_type_detector import PageTypeDetector
@@ -41,7 +41,7 @@ async def main():
     extractor = ProductsExtractor()
     mapper = ProductMapper()
 
-    scrape_page_uc = ScrapeSinglePageUseCase(loader, extractor, mapper)
+    scrape_page_uc = ScrapeAllProductsFromPageUseCase(loader, extractor, mapper)
 
     if detector.detect(parts).name == "SUBCATEGORY":
         scraper = ScrapeCatalogUseCase(

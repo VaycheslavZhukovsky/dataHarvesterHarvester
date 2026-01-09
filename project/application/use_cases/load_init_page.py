@@ -9,7 +9,6 @@ class LoadInitialPageUseCase:
     async def execute(self, url: str):
         html = await self.loader.load_dom(url)
         total_products = get_number_of_products(html)
-        total_pages = max(1, total_products // 30)
 
-        paginator = self.paginator_factory.create(url, total_pages)
+        paginator = self.paginator_factory.create(url, total_products)
         return paginator

@@ -94,8 +94,9 @@ class ProductsExtractor(IProductsExtractor):
 
         pos = html.find(self.start_marker)
         if pos == -1:
-            logger.warning("start_marker not found in HTML")
-            return None
+            message = "start_marker not found in HTML. INITIAL_STATE['plp'] not found"
+            logger.error(message)
+            raise JsonBlockNotFoundError(message)
 
         logger.debug("start_marker found, extracting JSON block")
         tail = html[pos:]
@@ -105,10 +106,6 @@ class ProductsExtractor(IProductsExtractor):
         logger.debug("Creating products list from HTML string")
 
         json_str = self.extract_json_from_html_str(html)
-        if json_str is None:
-            logger.error("INITIAL_STATE['plp'] block not found")
-            raise JsonBlockNotFoundError("INITIAL_STATE['plp'] not found")
-
         products_json = self.extract_products_data(json_str)
 
         logger.debug("Parsing products JSON into Python objects")

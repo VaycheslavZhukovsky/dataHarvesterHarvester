@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from project.application.use_cases.scrape_single_page import ScrapeSinglePageUseCase
+from project.application.use_cases.scrape_page import ScrapeAllProductsFromPageUseCase
 from project.infrastructure.exceptions.parsing_errors import ParsingError
 
 
@@ -16,7 +16,7 @@ async def test_scrape_single_page_success():
     mapper = MagicMock()
     mapper.to_entities.return_value = ["entity1"]
 
-    uc = ScrapeSinglePageUseCase(loader, extractor, mapper)
+    uc = ScrapeAllProductsFromPageUseCase(loader, extractor, mapper)
 
     result = await uc.execute("http://example.com")
 
@@ -37,7 +37,7 @@ async def test_scrape_single_page_parsing_error():
 
     mapper = MagicMock()
 
-    uc = ScrapeSinglePageUseCase(loader, extractor, mapper)
+    uc = ScrapeAllProductsFromPageUseCase(loader, extractor, mapper)
 
     with pytest.raises(ParsingError):
         await uc.execute("http://example.com")
@@ -53,7 +53,7 @@ async def test_scrape_single_page_unexpected_error():
 
     mapper = MagicMock()
 
-    uc = ScrapeSinglePageUseCase(loader, extractor, mapper)
+    uc = ScrapeAllProductsFromPageUseCase(loader, extractor, mapper)
 
     with pytest.raises(RuntimeError):
         await uc.execute("http://example.com")

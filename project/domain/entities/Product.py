@@ -12,7 +12,6 @@ class Product:
     category: Category
     brand: Brand
     displayed_name: DisplayedName
-    # eligibility: Eligibility | None
     source: Source
     measurement_data: MeasurementData
     characteristics: Characteristics

@@ -1,7 +1,7 @@
 from project.infrastructure.exceptions.parsing_errors import ParsingError
 
 
-class ScrapeSinglePageUseCase:
+class ScrapeAllProductsFromPageUseCase:
     def __init__(self, loader, extractor, mapper):
         self.loader = loader
         self.extractor = extractor
@@ -13,7 +13,7 @@ class ScrapeSinglePageUseCase:
         try:
             products_raw = self.extractor.create_products_list_from_str(html)
         except ParsingError:
-            raise
+            raise ParsingError
         except Exception as e:
             raise RuntimeError(f"Failed to extract products on page {url}: {e}")
 

@@ -1,4 +1,5 @@
 import logging
+from logging.handlers import RotatingFileHandler  # <<< ДОБАВЛЕНО
 
 
 class ColorFormatter(logging.Formatter):
@@ -21,17 +22,32 @@ class ColorFormatter(logging.Formatter):
 
 def setup_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
 
+    logger.setLevel(logging.INFO)   # <<< ИЗМЕНЕНО
+
+    # -----------------------------
     # Консольный обработчик
+    # -----------------------------
     ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
+    ch.setLevel(logging.INFO)       # <<< ИЗМЕНЕНО
+    ch.setFormatter(ColorFormatter())
 
-    # Цветной форматтер
-    formatter = ColorFormatter()
-    ch.setFormatter(formatter)
+    # -----------------------------
+    # Файловый обработчик
+    # -----------------------------
+    fh = RotatingFileHandler(
+        filename="app.log",            # <<< ДОБАВЛЕНО
+        maxBytes=5_000_000,            # <<< ДОБАВЛЕНО (5 MB)
+        backupCount=3                  # <<< ДОБАВЛЕНО
+    )
+    fh.setLevel(logging.WARNING)       # <<< ДОБАВЛЕНО
+    fh.setFormatter(logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(pathname)s:%(lineno)d - %(message)s"
+    ))                                 # <<< ДОБАВЛЕНО
 
+    # Добавляем обработчики, если их ещё нет
     if not logger.handlers:
         logger.addHandler(ch)
+        logger.addHandler(fh)          # <<< ДОБАВЛЕНО
 
     return logger

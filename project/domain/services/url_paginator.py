@@ -9,6 +9,7 @@ from project.domain.value_objects.page_state import PageProcessingState
 class UrlPaginator:
     parts: UrlParts
     state: PageProcessingState
+    total_products: Optional[int]
 
     def current_page(self) -> Optional[int]:
         """Возвращает текущую страницу для обработки или None, если всё обработано."""
@@ -41,4 +42,4 @@ class UrlPaginator:
             return self
 
         new_state = self.state.add_processed(page)
-        return UrlPaginator(parts=self.parts, state=new_state)
+        return UrlPaginator(parts=self.parts, state=new_state, total_products=self.total_products)
