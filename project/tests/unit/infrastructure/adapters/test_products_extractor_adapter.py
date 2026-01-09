@@ -1,9 +1,9 @@
-from project.infrastructure.parsers.products_extractor import ProductsExtractor
+from project.infrastructure.parsers.ProductsExtractorFromHtml import ProductsExtractorFromHtml
 from project.infrastructure.adapters.products_extractor_adapter import ProductsExtractorAdapter
 
 
 def test_adapter_with_str():
-    extractor = ProductsExtractor()
+    extractor = ProductsExtractorFromHtml()
     adapter = ProductsExtractorAdapter(extractor)
 
     html = '''
@@ -17,7 +17,7 @@ def test_adapter_with_str():
 
 
 def test_adapter_with_path(tmp_path):
-    extractor = ProductsExtractor()
+    extractor = ProductsExtractorFromHtml()
     adapter = ProductsExtractorAdapter(extractor)
 
     file = tmp_path / "page.html"

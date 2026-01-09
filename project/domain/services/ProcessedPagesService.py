@@ -6,7 +6,7 @@ from project.infrastructure.logging.logger_config import setup_logger
 logger = setup_logger(__name__)
 
 
-class PageStateService:
+class ProcessedPagesService:
     """
     Доменный сервис, который управляет состоянием загруженных страниц.
     """

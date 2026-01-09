@@ -11,7 +11,7 @@ logger = setup_logger(__name__)
 
 class ProductMapper:
     @staticmethod
-    def to_entity(raw: dict) -> Product:
+    def asemble_entity(raw: dict) -> Product:
         try:
             return Product(
                 product_price_category=ProductPriceCategory(category=raw["productPriceCategory"]),
@@ -35,5 +35,5 @@ class ProductMapper:
             ) from exc
 
     @staticmethod
-    def to_entities(rows: list[dict]) -> list[Product]:
-        return [ProductMapper.to_entity(row) for row in rows]
+    def asemble_entities(rows: list[dict]) -> list[Product]:
+        return [ProductMapper.asemble_entity(row) for row in rows]

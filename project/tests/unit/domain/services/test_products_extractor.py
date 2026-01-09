@@ -2,12 +2,12 @@ import pytest
 
 from project.infrastructure.exceptions.parsing_errors import JsonExtractionError, JsonBlockNotFoundError, \
     ProductsDataMalformedError
-from project.infrastructure.parsers.products_extractor import ProductsExtractor
+from project.infrastructure.parsers.ProductsExtractorFromHtml import ProductsExtractorFromHtml
 
 
 @pytest.fixture
 def extractor():
-    return ProductsExtractor()
+    return ProductsExtractorFromHtml()
 
 
 def test_unbalanced_json_braces(extractor):

@@ -17,7 +17,7 @@ from project.infrastructure.logging.logger_config import setup_logger
 logger = setup_logger(__name__)
 
 
-class PgPageStateRepository(IPageStateRepository):
+class PgProcessedPagesRepository(IPageStateRepository):
     """
     Хранит обработанные страницы категории.
     Работает через category_id, который ищется по slug.

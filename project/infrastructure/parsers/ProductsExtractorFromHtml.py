@@ -13,7 +13,7 @@ from project.infrastructure.logging.logger_config import setup_logger
 logger = setup_logger(__name__)
 
 
-class ProductsExtractor(IProductsExtractor):
+class ProductsExtractorFromHtml(IProductsExtractor):
 
     def __init__(self, start_marker: str = 'window.INITIAL_STATE["plp"]'):
         self.start_marker = start_marker

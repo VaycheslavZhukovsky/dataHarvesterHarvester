@@ -35,9 +35,9 @@ async def test_scrape_catalog_full_flow():
         mapper=mapper,
         paginator_factory=paginator_factory,
         page_state_service=page_state_service,
-        load_initial_uc=lambda *a: load_initial_uc.return_value,
-        restore_paginator_uc=lambda *a: restore_paginator_uc,
-        scrape_page_uc=scrape_page_uc,
+        first_page_load_category_uc=lambda *a: load_initial_uc.return_value,
+        recovery_processed_data_category_uc=lambda *a: restore_paginator_uc,
+        scraper_page_uc=scrape_page_uc,
     )
 
     results = []

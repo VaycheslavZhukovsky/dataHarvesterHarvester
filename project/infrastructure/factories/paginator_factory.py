@@ -7,7 +7,7 @@ from project.domain.value_objects.page_state import PageProcessingState
 
 class PaginatorFactory:
     @staticmethod
-    def create(url: str, total_products: Optional[int] = None) -> UrlPaginator:
+    def create_paginator(url: str, total_products: Optional[int] = None) -> UrlPaginator:
         parts = UrlParts.from_url(url)
         total_pages = max(1, total_products // 30)
         state = PageProcessingState(total_pages=total_pages)

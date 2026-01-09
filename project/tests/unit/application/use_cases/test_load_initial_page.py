@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from project.application.use_cases.load_init_page import LoadInitialPageUseCase
+from project.application.use_cases.load_init_page import FirstPageLoadCategoryUseCase
 
 
 @pytest.mark.asyncio
@@ -13,7 +13,7 @@ async def test_load_initial_page_success():
     paginator_factory = MagicMock()
     paginator_factory.create.return_value = paginator
 
-    uc = LoadInitialPageUseCase(loader, paginator_factory)
+    uc = FirstPageLoadCategoryUseCase(loader, paginator_factory)
 
     result = await uc.execute("http://example.com")
 
@@ -31,7 +31,7 @@ async def test_load_initial_page_minimum_one_page():
     paginator_factory = MagicMock()
     paginator_factory.create.return_value = paginator
 
-    uc = LoadInitialPageUseCase(loader, paginator_factory)
+    uc = FirstPageLoadCategoryUseCase(loader, paginator_factory)
 
     result = await uc.execute("http://example.com")
 

@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from project.application.use_cases.restore_paginator import RestorePaginatorUseCase
+from project.application.use_cases.restore_paginator import RecoveryProcessedDataCategoryUseCase
 
 
 def test_restore_paginator_success():
@@ -10,7 +10,7 @@ def test_restore_paginator_success():
     paginator_factory = MagicMock()
     paginator_factory.create.return_value = paginator
 
-    uc = RestorePaginatorUseCase(paginator_factory)
+    uc = RecoveryProcessedDataCategoryUseCase(paginator_factory)
 
     result = uc.execute("http://example.com", 10, [1, 2, 3])
 

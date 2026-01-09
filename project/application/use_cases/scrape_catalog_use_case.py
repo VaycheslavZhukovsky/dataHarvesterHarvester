@@ -13,26 +13,26 @@ class ScrapeCatalogUseCase:
     def __init__(
             self,
             loader,
-            page_state_service,
-            load_initial_uc,
-            restore_paginator_uc,
-            scrape_page_uc,
+            processed_pages,
+            first_page_load_category_uc,
+            recovery_processed_data_category_uc,
+            scraper_page_uc,
             url_parts,
             page_category_total_products,
             page_product_repository,
             retry_policy,
     ):
         self.loader = loader
-        self.page_state_service = page_state_service
+        self.processed_pages = processed_pages
         self.url_parts = url_parts
         self.page_category_total_products = page_category_total_products
         self.page_product_repository = page_product_repository
         self.retry_policy = retry_policy
 
-        self.load_initial_uc = load_initial_uc
-        self.restore_paginator_uc = restore_paginator_uc
+        self.first_page_load_category_uc = first_page_load_category_uc
+        self.recovery_processed_data_category_uc = recovery_processed_data_category_uc
 
-        self.scrape_page_uc = scrape_page_uc
+        self.scraper_page_uc = scraper_page_uc
 
     async def execute(self, url: str):
         logger.info(f"Starting catalog scraping for URL: {url}")
@@ -40,17 +40,17 @@ class ScrapeCatalogUseCase:
         slug = self.url_parts.from_url(url).segments[1]
 
         try:
-            all_pages, processed = await self.page_state_service.get_loaded_pages(slug)
+            all_pages, processed_pages = await self.processed_pages.get_loaded_pages(slug)
 
             await self.loader.start()
 
-            if not processed:
-                paginator = await self.load_initial_uc.execute(url)
+            if not processed_pages:
+                paginator = await self.first_page_load_category_uc.get_total_products(url)
                 total_products = paginator.total_products
                 slug = paginator.parts.segments[1]
                 await self.page_category_total_products.update_total_products(slug, total_products)
             else:
-                paginator = self.restore_paginator_uc.execute(url, all_pages, processed)
+                paginator = self.recovery_processed_data_category_uc.assemble_paginator(url, all_pages, processed_pages)
 
             while True:
                 page_url = paginator.next_url()
@@ -61,7 +61,7 @@ class ScrapeCatalogUseCase:
                 logger.info(f"Scraping page: {page_url}")
 
                 try:
-                    entities = await self.scrape_page_uc.execute(page_url)
+                    entities = await self.scraper_page_uc.get_all_products(page_url)
                     self.retry_policy.register_success()
 
                 except ParsingError:
@@ -83,7 +83,7 @@ class ScrapeCatalogUseCase:
                     continue
 
                 await self.page_product_repository.add_products_bulk(slug=slug, items=entities)
-                await self.page_state_service.add_url(slug=slug, page=page)
+                await self.processed_pages.add_url(slug=slug, page=page)
 
                 paginator = paginator.mark_processed()
                 yield entities
@@ -97,12 +97,12 @@ class ScrapeCatalogUseCase:
             await self.loader.close()
             raise
 
-        except DatabaseOperationError as e:
-            logger.error(f"Ошибка БД при обработке slug='{slug}': {e}")
+        except DatabaseOperationError:
+            logger.error(f"Ошибка БД при обработке slug='{slug}'")
             await self.loader.close()
             raise
 
-        except DatabaseConnectionError as e:
+        except DatabaseConnectionError:
             logger.error("База данных недоступна — попробую позже")
             await self.loader.close()
             raise
