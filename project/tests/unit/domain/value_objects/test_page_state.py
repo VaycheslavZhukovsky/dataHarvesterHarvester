@@ -1,6 +1,6 @@
 import pytest
 
-from project.domain.value_objects.page_state import PageProcessingState
+from project.domain.value_objects.PageProcessingState import PageProcessingState
 
 
 def test_initial_state():

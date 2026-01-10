@@ -1,8 +1,8 @@
-from project.domain.handlers.category_handler import CategoryHandler
-from project.domain.handlers.factory import PageHandlerFactory
-from project.domain.handlers.product_handler import ProductHandler
-from project.domain.handlers.subcategory_handler import SubcategoryHandler
-from project.domain.value_objects.page_type import PageType
+from project.domain.handlers.CategoryHandler import CategoryHandler
+from project.domain.handlers.PageHandlerFactory import PageHandlerFactory
+from project.domain.handlers.ProductHandler import ProductHandler
+from project.domain.handlers.SubcategoryHandler import SubcategoryHandler
+from project.domain.value_objects.PageType import PageType
 
 factory = PageHandlerFactory()
 

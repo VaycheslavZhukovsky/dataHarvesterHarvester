@@ -1,4 +1,4 @@
-from project.infrastructure.adapters.file_html_reader import FileHtmlReader
+from project.infrastructure.adapters.FileHtmlReader import FileHtmlReader
 
 
 def test_file_html_reader_reads_file(tmp_path):

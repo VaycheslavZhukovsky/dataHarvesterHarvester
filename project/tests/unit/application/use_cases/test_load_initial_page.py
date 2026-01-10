@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from project.application.use_cases.load_init_page import FirstPageLoadCategoryUseCase
+from project.application.use_cases.FirstPageLoadCategoryUseCase import FirstPageLoadCategoryUseCase
 
 
 @pytest.mark.asyncio

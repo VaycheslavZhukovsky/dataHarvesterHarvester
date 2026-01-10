@@ -1,8 +1,8 @@
 from typing import Optional
 
-from project.domain.services.url_paginator import UrlPaginator
-from project.domain.value_objects.html_obj import UrlParts
-from project.domain.value_objects.page_state import PageProcessingState
+from project.domain.services.UrlPaginator import UrlPaginator
+from project.domain.value_objects.UrlParts import UrlParts
+from project.domain.value_objects.PageProcessingState import PageProcessingState
 
 
 class PaginatorFactory:

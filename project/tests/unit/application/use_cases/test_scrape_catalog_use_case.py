@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from project.application.use_cases.scrape_catalog_use_case import ScrapeCatalogUseCase
+from project.application.use_cases.ScrapeCatalogUseCase import ScrapeCatalogUseCase
 
 
 @pytest.mark.asyncio

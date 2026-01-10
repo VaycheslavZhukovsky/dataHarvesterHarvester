@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from project.application.use_cases.restore_paginator import RecoveryProcessedDataCategoryUseCase
+from project.application.use_cases.RecoveryProcessedDataCategoryUseCase import RecoveryProcessedDataCategoryUseCase
 
 
 def test_restore_paginator_success():

@@ -93,21 +93,21 @@ class ScrapeCatalogUseCase:
             await self.loader.close()
 
         except CategoryNotFoundError:
-            logger.warning(f"Категория '{slug}' не найдена")
+            logger.warning(f"Category '{slug}' not found")
             await self.loader.close()
             raise
 
         except DatabaseOperationError:
-            logger.error(f"Ошибка БД при обработке slug='{slug}'")
+            logger.error(f"Database error while processing slug='{slug}'")
             await self.loader.close()
             raise
 
         except DatabaseConnectionError:
-            logger.error("База данных недоступна — попробую позже")
+            logger.error("The database is unavailable - I'll try again later.")
             await self.loader.close()
             raise
 
         except ValueObjectProductValidationError:
-            logger.error("Ошибка валидации")
+            logger.error("Validation error")
             await self.loader.close()
             raise

@@ -2,31 +2,31 @@ import asyncio
 from pathlib import Path
 
 from project.application.retry_policy import RetryPolicy
-from project.application.use_cases.load_init_page import FirstPageLoadCategoryUseCase
-from project.application.use_cases.restore_paginator import RecoveryProcessedDataCategoryUseCase
-from project.application.use_cases.scrape_catalog_use_case import ScrapeCatalogUseCase
+from project.application.use_cases.FirstPageLoadCategoryUseCase import FirstPageLoadCategoryUseCase
+from project.application.use_cases.RecoveryProcessedDataCategoryUseCase import RecoveryProcessedDataCategoryUseCase
+from project.application.use_cases.ScrapeCatalogUseCase import ScrapeCatalogUseCase
 from project.application.use_cases.scrape_page import ScrapeAllProductsFromPageUseCase
 
 from project.domain.services.ProcessedPagesService import ProcessedPagesService
-from project.domain.services.page_type_detector import PageTypeDetector
-from project.domain.value_objects.html_obj import UrlParts
+from project.domain.services.PageTypeDetector import PageTypeDetector
+from project.domain.value_objects.UrlParts import UrlParts
 
 from project.config import CATEGORIES, SUBCATEGORIES
-from project.infrastructure.factories.paginator_factory import PaginatorFactory
+from project.infrastructure.factories.PaginatorFactory import PaginatorFactory
 from project.infrastructure.mappers.ProductMapper import ProductMapper
 from project.infrastructure.parsers.ProductsExtractorFromHtml import ProductsExtractorFromHtml
 from project.infrastructure.persistence.PgCategoryTotalProductsRepository import PgCategoryTotalProductsRepository
 from project.infrastructure.persistence.PgProcessedPagesRepository import PgProcessedPagesRepository
 from project.infrastructure.persistence.PgProductsRepository import PgProductsRepository
-from project.infrastructure.playwright.playwright_page_loader import PlaywrightPageLoader
-from project.infrastructure.playwright.cookies_manager import CookiesManager
+from project.infrastructure.playwright.PlaywrightPageLoader import PlaywrightPageLoader
+from project.infrastructure.playwright.CookiesManager import CookiesManager
 from project.infrastructure.logging.logger_config import setup_logger
 
 logger = setup_logger(__name__)
 
 
 async def main():
-    url = "https://lemanapro.ru/catalogue/professionalnye-instrumenty-i-krepezh"
+    url = "https://lemanapro.ru/catalogue/teplyy-vodyanoy-pol"
 
     root = Path(__file__).resolve().parent
     path_cookies = root / "project" / "infrastructure" / "cookies.txt"

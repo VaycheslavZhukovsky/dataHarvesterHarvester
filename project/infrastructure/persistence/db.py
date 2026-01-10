@@ -84,7 +84,7 @@ processed_pages = Table(
 
 def _get_database_url() -> str:
     """
-    Берём URL из переменной окружения или дефолт.
+    We take the URL from the environment variable or use the default one.
     """
     return os.getenv(
         "DATABASE_URL",
@@ -109,8 +109,8 @@ session_factory = async_sessionmaker(
 
 async def get_session() -> AsyncSession:
     """
-    Асинхронный контекстный менеджер для работы с БД.
-    Пример:
+    An asynchronous context manager for working with databases.
+    Example:
         async with get_session() as session:
             ...
     """

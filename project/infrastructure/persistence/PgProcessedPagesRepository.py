@@ -19,8 +19,8 @@ logger = setup_logger(__name__)
 
 class PgProcessedPagesRepository(IPageStateRepository):
     """
-    Хранит обработанные страницы категории.
-    Работает через category_id, который ищется по slug.
+    Stores processed category pages.
+    It works through the category_id, which is found by the slug.
     """
     async def _find_category_id(self, slug: str) -> Optional[int]:
         logger.debug(f"Поиск category_id по slug='{slug}'")
@@ -33,32 +33,32 @@ class PgProcessedPagesRepository(IPageStateRepository):
                 row = result.fetchone()
 
         except ConnectionRefusedError as exc:
-            logger.exception("Ошибка подключения к БД")
-            raise DatabaseConnectionError("Ошибка подключения к БД") from exc
+            logger.exception("Database connection error")
+            raise DatabaseConnectionError("Database connection error") from exc
 
         except Exception as exc:
-            logger.exception(f"Ошибка при поиске категории slug='{slug}'")
+            logger.exception(f"Error searching for category with slug='{slug}'")
             raise DatabaseOperationError(
-                f"Ошибка при поиске категории '{slug}'"
+                f"Error searching for category '{slug}'"
             ) from exc
 
         if row:
-            logger.debug(f"Найдена категория: id={row[0]} для slug='{slug}'")
+            logger.debug(f"Category found: id={row[0]} for slug='{slug}'")
             return row[0]
 
         return None
 
     async def add_url(self, slug: str, page: int) -> None:
         """
-        Добавляет обработанную страницу категории.
-        Если категории нет — выбрасываем исключение.
+        Adds the processed category page.
+        If the category does not exist, an exception is thrown.
         """
 
-        logger.info(f"Добавление обработанной страницы page={page} для slug='{slug}'")
+        logger.info(f"Adding processed page page={page} for slug='{slug}'")
 
         category_id = await self._find_category_id(slug)
         if category_id is None:
-            raise CategoryNotFoundError(f"Категория '{slug}' не найдена")
+            raise CategoryNotFoundError(f"Category '{slug}' not found")
 
         try:
             async with session_factory() as session:
@@ -71,25 +71,25 @@ class PgProcessedPagesRepository(IPageStateRepository):
                 await session.commit()
         except Exception as exc:
             logger.exception(
-                f"Ошибка при добавлении страницы page={page} для slug='{slug}'"
+                f"Error adding page={page} for slug='{slug}'"
             )
             raise DatabaseOperationError(
-                f"Ошибка при добавлении обработанной страницы '{slug}', page={page}"
+                f"Error adding processed page '{slug}', page={page}"
             ) from exc
 
         logger.info(
-            f"Страница page={page} успешно добавлена для категории slug='{slug}'"
+            f"Page {page} has been successfully added for category slug='{slug}'."
         )
 
     async def get_data_from_category(self, slug: str) -> Tuple[int, Tuple[int, ...]]:
         """
-        Возвращает:
-        - total_products
-        - tuple(processed_pages)
-        Если категории нет — возвращает (0, ()).
+        Returns:
+            - total_products
+            - tuple(processed_pages)
+            If the category does not exist, it returns (0, ()).
         """
 
-        logger.debug(f"Получение данных категории slug='{slug}'")
+        logger.debug(f"Retrieving data for category with slug='{slug}'")
 
         category_id = await self._find_category_id(slug)
 
@@ -108,14 +108,14 @@ class PgProcessedPagesRepository(IPageStateRepository):
                 pages = sorted({r[0] for r in rows})
         except Exception as exc:
             logger.exception(
-                f"Ошибка при получении данных категории slug='{slug}'"
+                f"Error retrieving data for category with slug='{slug}'"
             )
             raise DatabaseOperationError(
-                f"Ошибка при получении данных категории '{slug}'"
+                f"Error retrieving data for category '{slug}'"
             ) from exc
 
         logger.debug(
-            f"Для slug='{slug}' найдено total_products={total_products}, "
+            f"For slug='{slug}', total_products={total_products} were found, "
             f"processed_pages={pages}"
         )
 

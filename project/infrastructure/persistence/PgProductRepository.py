@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import List
-from sqlalchemy import insert, update, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from project.domain.entities.Product import Product
@@ -14,17 +13,10 @@ from project.infrastructure.persistence.db import (
 
 
 class PgProductRepository(IProductRepository):
-    """
-    Репозиторий продуктов.
-    Использует SQLAlchemy Core + async.
-    """
 
     async def save_many(self, items: List[Product]) -> None:
         async with session_factory() as session:
             for product in items:
-                # -----------------------------
-                # UPSERT в таблицу products
-                # -----------------------------
                 stmt = pg_insert(products).values(
                     id=int(product.product_id.id),
                     displayed_name=product.displayed_name.name,
@@ -77,9 +69,6 @@ class PgProductRepository(IProductRepository):
 
                 await session.execute(stmt)
 
-                # -----------------------------
-                # Характеристики (INSERT IGNORE)
-                # -----------------------------
                 for ch in product.characteristics.characteristics:
                     stmt_char = pg_insert(product_characteristics).values(
                         product_id=int(product.product_id.id),

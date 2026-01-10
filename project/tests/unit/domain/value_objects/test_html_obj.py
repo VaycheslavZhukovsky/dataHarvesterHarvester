@@ -2,7 +2,7 @@ from urllib.parse import urlparse, parse_qs
 
 import pytest
 
-from project.domain.value_objects.html_obj import HtmlContent, UrlParts
+from project.domain.value_objects.UrlParts import HtmlContent, UrlParts
 
 
 # -----------------------------

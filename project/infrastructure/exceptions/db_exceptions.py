@@ -1,10 +1,10 @@
 
 class CategoryNotFoundError(Exception):
-    """Категория с таким slug не найдена в БД."""
+    """A category with this slug was not found in the database."""
 
 
 class DatabaseOperationError(Exception):
-    """Ошибка при выполнении операции с БД."""
+    """An error occurred while performing the database operation."""
 
 
 class DatabaseConnectionError(Exception):

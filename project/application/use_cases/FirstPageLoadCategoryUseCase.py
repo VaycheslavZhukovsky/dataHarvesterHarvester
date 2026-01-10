@@ -1,5 +1,5 @@
 from project.domain.services.number_of_products_extractor import get_number_of_products
-from project.domain.services.url_paginator import UrlPaginator
+from project.domain.services.UrlPaginator import UrlPaginator
 
 
 class FirstPageLoadCategoryUseCase:

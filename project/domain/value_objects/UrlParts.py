@@ -1,29 +1,6 @@
 from dataclasses import dataclass
 from urllib.parse import urlparse, parse_qs, urlunparse, urlencode
 
-from pydantic import BaseModel, field_validator
-
-
-class HtmlContent(BaseModel):
-    html: str
-    min_chars: int = 2000
-
-    model_config = {
-        "frozen": True,
-        "strict": True,
-    }
-
-    @field_validator('html')
-    def check_length(cls, v, values):
-        min_chars = values.data.get('min_chars', 2000)
-        if len(v) <= min_chars:
-            raise ValueError(f"HTML content must be longer than {min_chars} characters")
-        return v
-
-    def get_length(self) -> int:
-        """Вернуть текущую длину документа."""
-        return len(self.html)
-
 
 @dataclass(frozen=True)
 class UrlParts:

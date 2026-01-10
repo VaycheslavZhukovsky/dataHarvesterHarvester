@@ -13,8 +13,8 @@ from project.infrastructure.persistence.db import (
 
 class PgCategoryTotalProductsRepository(ICategoryTotalProductsRepository):
     """
-    Обновляет total_products категории.
-    Работает через category_id, который ищется по slug.
+    Updates the total_products count for a category.
+    It works using the category_id, which is found by its slug.
     """
 
     async def _find_category_id(self, slug: str) -> int | None:
@@ -27,8 +27,8 @@ class PgCategoryTotalProductsRepository(ICategoryTotalProductsRepository):
 
     async def update_total_products(self, slug: str, total: int) -> None:
         """
-        Обновляет total_products.
-        Если категории нет — ничего не делаем.
+        Updates total_products.
+        If the category does not exist, we do nothing.
         """
 
         category_id = await self._find_category_id(slug)

@@ -5,8 +5,8 @@ from typing import List, Optional
 @dataclass(frozen=True)
 class PageProcessingState:
     """
-    Value Object состояния пагинации.
-    total_pages может быть None до первой загрузки страницы.
+    Value Object representing the pagination state.
+    total_pages can be None until the first page is loaded.
     """
     total_pages: Optional[int] = None
     processed_pages: List[int] = field(default_factory=list)
@@ -16,14 +16,14 @@ class PageProcessingState:
     # ---------------------------
     def with_total_pages(self, total_pages: int) -> "PageProcessingState":
         """
-        Возвращает новое состояние с установленным total_pages.
-        Если total_pages уже установлен — запрещаем менять.
+        Returns a new state with total_pages set.
+        If total_pages is already set, changing it is not allowed.
         """
         if total_pages < 1:
-            raise ValueError("total_pages должен быть >= 1")
+            raise ValueError("total_pages must be >= 1")
 
         if self.total_pages is not None:
-            raise ValueError("total_pages уже установлен и не может быть изменён")
+            raise ValueError("total_pages is already set and cannot be changed.")
 
         return PageProcessingState(
             total_pages=total_pages,
@@ -35,15 +35,15 @@ class PageProcessingState:
     # ---------------------------
     def add_processed(self, page: int) -> "PageProcessingState":
         """
-        Добавляет обработанную страницу.
-        Если total_pages ещё неизвестен — разрешаем только page >= 1.
+        Adds the processed page.
+        If total_pages is not yet known, we only allow page >= 1.
         """
         if page < 1:
-            raise ValueError("Номер страницы должен быть >= 1")
+            raise ValueError("The page number must be greater than or equal to 1.")
 
         if self.total_pages is not None and page > self.total_pages:
             raise ValueError(
-                f"Страница {page} вне диапазона 1..{self.total_pages}"
+                f"Page {page} is outside the range {self.total_pages}"
             )
 
         new_pages = sorted(set(self.processed_pages + [page]))
@@ -57,10 +57,10 @@ class PageProcessingState:
     # ---------------------------
     def current_page(self) -> Optional[int]:
         """
-        Возвращает следующую страницу для обработки.
-        Если total_pages неизвестен — возвращаем:
-            1, если ничего не обработано
-            max(processed_pages) + 1, если уже что-то обработано
+        Returns the next page to process.
+        If total_pages is unknown, return:
+            1 if nothing has been processed yet
+            max(processed_pages) + 1 if something has already been processed
         """
         if self.total_pages is None:
             if not self.processed_pages:
@@ -73,13 +73,7 @@ class PageProcessingState:
                 return page
         return None
 
-    # ---------------------------
-    # Завершена ли пагинация
-    # ---------------------------
     def is_finished(self) -> bool:
-        """
-        Если total_pages неизвестен — пагинация не может быть завершена.
-        """
         if self.total_pages is None:
             return False
 

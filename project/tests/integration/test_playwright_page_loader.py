@@ -1,5 +1,5 @@
 import pytest
-from project.infrastructure.playwright.playwright_page_loader import PlaywrightPageLoader
+from project.infrastructure.playwright.PlaywrightPageLoader import PlaywrightPageLoader
 
 
 @pytest.mark.asyncio

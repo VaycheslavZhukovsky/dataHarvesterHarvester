@@ -2,7 +2,7 @@ import json
 import pytest
 from pathlib import Path
 
-from project.infrastructure.playwright.cookies_manager import CookiesManager
+from project.infrastructure.playwright.CookiesManager import CookiesManager
 
 
 @pytest.fixture

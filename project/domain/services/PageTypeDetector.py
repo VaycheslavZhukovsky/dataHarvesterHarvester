@@ -1,5 +1,5 @@
-from project.domain.value_objects.html_obj import UrlParts
-from project.domain.value_objects.page_type import PageType
+from project.domain.value_objects.UrlParts import UrlParts
+from project.domain.value_objects.PageType import PageType
 
 
 class PageTypeDetector:

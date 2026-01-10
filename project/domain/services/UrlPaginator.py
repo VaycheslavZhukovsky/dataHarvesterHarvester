@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from project.domain.value_objects.html_obj import UrlParts
-from project.domain.value_objects.page_state import PageProcessingState
+from project.domain.value_objects.UrlParts import UrlParts
+from project.domain.value_objects.PageProcessingState import PageProcessingState
 
 
 @dataclass(frozen=True)
@@ -12,13 +12,13 @@ class UrlPaginator:
     total_products: Optional[int]
 
     def current_page(self) -> Optional[int]:
-        """Возвращает текущую страницу для обработки или None, если всё обработано."""
+        """Returns the current page for processing, or None if all pages have been processed."""
         return self.state.current_page()
 
     def next_url(self) -> Optional[str]:
         """
-        Возвращает URL следующей страницы и обновлённое состояние.
-        Если все страницы обработаны — возвращает None.
+        Returns the URL of the next page and the updated state.
+        If all pages have been processed, it returns None.
         """
         page = self.state.current_page()
         if page is None:
@@ -32,9 +32,9 @@ class UrlPaginator:
 
     def mark_processed(self, page: Optional[int] = None) -> "UrlPaginator":
         """
-        Возвращает новый UrlPaginator с обновлённым состоянием,
-        где страница помечена как обработанная.
-        Если page не указан — используется текущая.
+        Returns a new UrlPaginator with updated state,
+        where the page is marked as processed.
+        If page is not specified, the current page is used.
         """
         if page is None:
             page = self.current_page()

@@ -1,5 +1,5 @@
 from project.domain.handlers.base import PageHandler
-from project.domain.value_objects.html_obj import UrlParts
+from project.domain.value_objects.UrlParts import UrlParts
 
 
 class ProductHandler(PageHandler):

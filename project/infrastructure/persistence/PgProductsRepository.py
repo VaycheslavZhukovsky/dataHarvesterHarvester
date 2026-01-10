@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from sqlalchemy import select, insert
+from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import SQLAlchemyError
 
 from project.domain.entities.Product import Product
@@ -17,94 +18,89 @@ logger = setup_logger(__name__)
 
 class PgProductsRepository:
     """
-    Массовая вставка Product агрегатов.
-    Гарантирует отсутствие ошибок по primary key.
+    Bulk insertion of Product aggregates.
+    Guarantees no primary key errors.
     """
 
     async def add_products_bulk(self, slug: str, items: list[Product]) -> None:
         if not items:
-            logger.debug(f"Нет продуктов для вставки для slug='{slug}'")
+            logger.debug(f"There are no products to insert for slug='{slug}'")
             return
 
-        logger.info(f"Начинаю массовую вставку продуктов для slug='{slug}'")
+        logger.info(f"Starting bulk insertion of products for slug='{slug}'")
 
         try:
             async with session_factory() as session:
 
                 # 0. Получаем category_id по slug
-                logger.debug(f"Получаю category_id по slug='{slug}'")
+                logger.debug(f"I'm getting the category_id using slug='{slug}'")
                 result = await session.execute(
                     select(categories.c.id).where(categories.c.slug == slug)
                 )
                 row = result.fetchone()
 
                 if not row:
-                    logger.warning(f"Категория slug='{slug}' не найдена")
+                    logger.warning(f"Category with slug='{slug}' not found.")
                     raise CategoryNotFoundError(f"Категория '{slug}' не найдена")
 
                 category_id = row[0]
-                logger.debug(f"Найдена категория id={category_id} для slug='{slug}'")
+                logger.debug(f"Category with id={category_id} found for slug='{slug}'")
 
                 # 1. Собираем все product_id из агрегатов
                 incoming_ids = [int(p.product_id.id) for p in items]
-                logger.debug(f"Входящие product_id: {incoming_ids}")
+                logger.debug(f"Incoming product_id: {incoming_ids}")
 
                 # 2. Получаем существующие ID одним запросом
                 result = await session.execute(
                     select(products.c.id).where(products.c.id.in_(incoming_ids))
                 )
                 existing_ids = {row[0] for row in result.fetchall()}
-                logger.debug(f"Существующие product_id в БД: {existing_ids}")
+                logger.debug(f"Existing product_ids in the database: {existing_ids}")
 
-                # 3. Фильтруем только новые продукты
                 new_products = [
                     p for p in items
                     if p.product_id.id not in existing_ids
                 ]
 
                 if not new_products:
-                    logger.info(f"Все продукты для slug='{slug}' уже существуют")
+                    logger.info(f"All products for slug='{slug}' already exist.")
                     return
 
-                logger.info(f"Новых продуктов для вставки: {len(new_products)}")
+                logger.info(f"New products to insert: {len(new_products)}")
 
                 # 4. Преобразуем агрегаты в dict
                 rows = [self._to_row(p, category_id) for p in new_products]
 
                 # 5. Массовая вставка
-                stmt = insert(products)
+                # stmt = insert(products)
+                stmt = insert(products).on_conflict_do_nothing(index_elements=["id"])
                 await session.execute(stmt, rows)
                 await session.commit()
 
                 logger.info(
-                    f"Успешно вставлено {len(new_products)} продуктов для slug='{slug}'"
+                    f"Successfully inserted {len(new_products)} products for slug='{slug}'"
                 )
 
         except CategoryNotFoundError:
-            # Это бизнес‑ошибка — пробрасываем без логирования
             raise
 
         except SQLAlchemyError as exc:
             logger.exception(
-                f"Ошибка SQL при массовой вставке продуктов для slug='{slug}'"
+                f"SQL error during bulk insertion of products for slug='{slug}'"
             )
             raise DatabaseOperationError(
-                f"Ошибка при массовой вставке продуктов для категории '{slug}'"
+                f"Error during bulk insertion of products for the category. '{slug}'"
             ) from exc
 
         except Exception as exc:
             logger.exception(
-                f"Неизвестная ошибка при массовой вставке продуктов для slug='{slug}'"
+                f"An unknown error occurred during bulk product insertion for slug='{slug}'"
             )
             raise DatabaseOperationError(
-                f"Неизвестная ошибка при массовой вставке продуктов для категории '{slug}'"
+                f"An unknown error occurred during the bulk insertion of products for the category. '{slug}'"
             ) from exc
 
     def _to_row(self, p: Product, category_id: int) -> dict:
-        """
-        Маппинг агрегата Product → dict для таблицы products.
-        category_id передаётся извне.
-        """
         return {
             "id": int(p.product_id.id),
             "category_id": category_id,

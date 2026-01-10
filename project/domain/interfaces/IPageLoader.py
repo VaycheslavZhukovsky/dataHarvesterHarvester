@@ -6,7 +6,7 @@ class IPageLoader(Protocol):
         ...
 
     async def load_dom(self, url: str, timeout: Optional[int]):
-        """Возвращает HTML как str"""
+        """Returns HTML as a string."""
         ...
 
     async def close(self) -> None:

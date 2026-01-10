@@ -1,6 +1,6 @@
-from project.domain.services.page_type_detector import PageTypeDetector
-from project.domain.value_objects.html_obj import UrlParts
-from project.domain.value_objects.page_type import PageType
+from project.domain.services.PageTypeDetector import PageTypeDetector
+from project.domain.value_objects.UrlParts import UrlParts
+from project.domain.value_objects.PageType import PageType
 
 CATEGORIES = {"elki-novogodnie", "okna"}
 SUBCATEGORIES = {"plastikovye", "derevyannye"}

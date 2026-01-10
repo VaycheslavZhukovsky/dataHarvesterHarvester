@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 class FileHtmlReader:
-    """Читает HTML из файла."""
+    """Reads HTML from a file."""
 
     @staticmethod
     def read(path: Path) -> str:

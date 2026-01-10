@@ -1,6 +1,6 @@
 import pytest
 
-from project.domain.value_objects.subcategory_url import SubcategoryUrl
+from project.domain.value_objects.SubcategoryUrl import SubcategoryUrl
 
 
 def test_value_object_normalization():

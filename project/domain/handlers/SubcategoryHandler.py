@@ -1,11 +1,11 @@
 from project.domain.handlers.base import PageHandler
-from project.domain.value_objects.html_obj import UrlParts
+from project.domain.value_objects.UrlParts import UrlParts
 
 
-class CategoryHandler(PageHandler):
+class SubcategoryHandler(PageHandler):
     def handle(self, parts: UrlParts):
         return {
-            "type": "category",
+            "type": "subcategory",
             "domain": parts.domain,
             "segments": parts.segments,
             "query": parts.query,
