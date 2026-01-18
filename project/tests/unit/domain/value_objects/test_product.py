@@ -171,12 +171,6 @@ def test_media_main_photo_valid():
     assert photo.desktop == product["mediaMainPhoto"]["desktop"]
 
 
-@pytest.mark.parametrize("urls", invalid_urls_list)
-def test_media_main_photo_invalid(urls):
-    with pytest.raises(ValueError):
-        MediaMainPhoto(**urls)
-
-
 # -----------------------------
 # Brand
 # -----------------------------

@@ -1,80 +1,108 @@
-from urllib.parse import urlparse, parse_qs
+import pytest
 
 from project.domain.services.UrlPaginator import UrlPaginator
 from project.domain.value_objects.UrlParts import UrlParts
 from project.domain.value_objects.PageProcessingState import PageProcessingState
 
 
-def test_current_page_and_next_url():
-    state = PageProcessingState(total_pages=3)
-    url = "https://example.com/catalog/items"
-    parts = UrlParts.from_url(url)
-    paginator = UrlPaginator(parts=parts, state=state)
+@pytest.fixture
+def parts():
+    return UrlParts.from_url("https://example.com/catalog/?color=red")
 
+
+@pytest.fixture
+def state():
+    return PageProcessingState(total_pages=3, processed_pages=[])
+
+
+@pytest.fixture
+def paginator(parts, state):
+    return UrlPaginator(parts=parts, state=state, total_products=None)
+
+
+# -----------------------------
+# current_page()
+# -----------------------------
+def test_current_page_initial(paginator):
     assert paginator.current_page() == 1
-    next_url = paginator.next_url()
-    parsed = urlparse(next_url)
-    query = parse_qs(parsed.query)
-    assert query["page"] == ["1"]
-
-    paginator = paginator.mark_processed()
-    assert paginator.current_page() == 2
-
-    next_url = paginator.next_url()
-    parsed = urlparse(next_url)
-    query = parse_qs(parsed.query)
-    assert query["page"] == ["2"]
 
 
-def test_mark_processed_creates_new_object():
-    state = PageProcessingState(total_pages=2)
-    url = "https://example.com/items"
-    parts = UrlParts.from_url(url)
-    paginator = UrlPaginator(parts=parts, state=state)
+def test_current_page_after_processing(parts):
+    state = PageProcessingState(total_pages=3, processed_pages=[1, 2])
+    paginator = UrlPaginator(parts=parts, state=state, total_products=None)
 
-    paginator2 = paginator.mark_processed()
-    assert paginator.current_page() == 1
-    assert paginator2.current_page() == 2
+    assert paginator.current_page() == 3
 
 
-def test_all_pages_processed_returns_none():
-    state = PageProcessingState(total_pages=2)
-    url = "https://example.com/items"
-    parts = UrlParts.from_url(url)
-    paginator = UrlPaginator(parts=parts, state=state)
+def test_current_page_finished(parts):
+    state = PageProcessingState(total_pages=2, processed_pages=[1, 2])
+    paginator = UrlPaginator(parts=parts, state=state, total_products=None)
 
-    paginator = paginator.mark_processed().mark_processed()
     assert paginator.current_page() is None
+
+
+# -----------------------------
+# next_url()
+# -----------------------------
+def test_next_url_first_page(paginator):
+    url = paginator.next_url()
+    assert url == "https://example.com/catalog?color=red&page=1"
+
+
+def test_next_url_none_when_finished(parts):
+    state = PageProcessingState(total_pages=2, processed_pages=[1, 2])
+    paginator = UrlPaginator(parts=parts, state=state, total_products=None)
+
     assert paginator.next_url() is None
 
 
-def test_preserves_query_parameters():
-    state = PageProcessingState(total_pages=2)
-    url = "https://example.com/items?sort=asc"
-    parts = UrlParts.from_url(url)
-    paginator = UrlPaginator(parts=parts, state=state)
+# -----------------------------
+# mark_processed()
+# -----------------------------
+def test_mark_processed_implicit(paginator):
+    """`mark_processed()` without an argument should mark the current page."""
+    new_paginator = paginator.mark_processed()
 
-    next_url = paginator.next_url()
-    parsed = urlparse(next_url)
-    query = parse_qs(parsed.query)
-    assert query["page"] == ["1"]
-    assert query["sort"] == ["asc"]
+    assert new_paginator.state.processed_pages == [1]
+    assert paginator.state.processed_pages == []  # immutability
 
 
-def test_multiple_pages_processing_loop():
-    state = PageProcessingState(total_pages=3)
-    url = "https://example.com/items"
-    parts = UrlParts.from_url(url)
-    paginator = UrlPaginator(parts=parts, state=state)
+def test_mark_processed_explicit(parts, state):
+    paginator = UrlPaginator(parts=parts, state=state, total_products=None)
+    new_paginator = paginator.mark_processed(2)
+
+    assert new_paginator.state.processed_pages == [2]
+    assert paginator.state.processed_pages == []
+
+
+def test_mark_processed_when_finished(parts):
+    state = PageProcessingState(total_pages=1, processed_pages=[1])
+    paginator = UrlPaginator(parts=parts, state=state, total_products=None)
+
+    new_paginator = paginator.mark_processed()
+
+    # ничего не меняется
+    assert new_paginator.state.processed_pages == [1]
+    assert new_paginator is not paginator  # but the object is new (immutable)
+
+
+# -----------------------------
+# next_url() + mark_processed() flow
+# -----------------------------
+def test_full_pagination_flow(parts):
+    state = PageProcessingState(total_pages=3, processed_pages=[])
+    paginator = UrlPaginator(parts=parts, state=state, total_products=None)
 
     urls = []
-    while paginator.current_page() is not None:
-        urls.append(paginator.next_url())
+    while True:
+        url = paginator.next_url()
+        if url is None:
+            break
+        urls.append(url)
         paginator = paginator.mark_processed()
 
-    expected = [
-        "https://example.com/items?page=1",
-        "https://example.com/items?page=2",
-        "https://example.com/items?page=3",
+    assert urls == [
+        "https://example.com/catalog?color=red&page=1",
+        "https://example.com/catalog?color=red&page=2",
+        "https://example.com/catalog?color=red&page=3",
     ]
-    assert urls == expected

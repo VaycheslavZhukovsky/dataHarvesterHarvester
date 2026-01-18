@@ -4,6 +4,7 @@ from typing import Optional
 from project.domain.interfaces.IPageLoader import IPageLoader
 
 
+
 class PlaywrightPageLoader(IPageLoader):
     def __init__(self, proxy: dict | None = None, cookies: list | None = None):
         self.proxy = proxy

@@ -11,14 +11,14 @@ async def test_load_initial_page_success():
 
     paginator = MagicMock()
     paginator_factory = MagicMock()
-    paginator_factory.create.return_value = paginator
+    paginator_factory.create_paginator.return_value = paginator
 
     uc = FirstPageLoadCategoryUseCase(loader, paginator_factory)
 
-    result = await uc.execute("http://example.com")
+    result = await uc.get_total_products("http://example.com")
 
     loader.load_dom.assert_called_once_with("http://example.com")
-    paginator_factory.create.assert_called_once()
+    paginator_factory.create_paginator.assert_called_once()
     assert result is paginator
 
 
@@ -29,10 +29,10 @@ async def test_load_initial_page_minimum_one_page():
 
     paginator = MagicMock()
     paginator_factory = MagicMock()
-    paginator_factory.create.return_value = paginator
+    paginator_factory.create_paginator.return_value = paginator
 
     uc = FirstPageLoadCategoryUseCase(loader, paginator_factory)
 
-    result = await uc.execute("http://example.com")
+    result = await uc.get_total_products("http://example.com")
 
     assert result is paginator

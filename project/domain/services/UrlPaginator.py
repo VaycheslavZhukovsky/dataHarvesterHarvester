@@ -39,7 +39,27 @@ class UrlPaginator:
         if page is None:
             page = self.current_page()
         if page is None:
-            return self
+            return UrlPaginator(
+                parts=self.parts,
+                state=self.state,
+                total_products=self.total_products,
+            )
 
         new_state = self.state.add_processed(page)
         return UrlPaginator(parts=self.parts, state=new_state, total_products=self.total_products)
+
+
+def mark_processed(self, page: Optional[int] = None) -> "UrlPaginator":
+    if page is None:
+        page = self.current_page()
+
+    # finished — но возвращаем новый объект, чтобы сохранить immutability
+    if page is None:
+        return UrlPaginator(
+            parts=self.parts,
+            state=self.state,
+            total_products=self.total_products,
+        )
+
+    new_state = self.state.add_processed(page)
+    return UrlPaginator(parts=self.parts, state=new_state, total_products=self.total_products)

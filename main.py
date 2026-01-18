@@ -5,7 +5,7 @@ from project.application.retry_policy import RetryPolicy
 from project.application.use_cases.FirstPageLoadCategoryUseCase import FirstPageLoadCategoryUseCase
 from project.application.use_cases.RecoveryProcessedDataCategoryUseCase import RecoveryProcessedDataCategoryUseCase
 from project.application.use_cases.ScrapeCatalogUseCase import ScrapeCatalogUseCase
-from project.application.use_cases.scrape_page import ScrapeAllProductsFromPageUseCase
+from project.application.use_cases.ScrapeAllProductsFromPageUseCase import ScrapeAllProductsFromPageUseCase
 
 from project.domain.services.ProcessedPagesService import ProcessedPagesService
 from project.domain.services.PageTypeDetector import PageTypeDetector

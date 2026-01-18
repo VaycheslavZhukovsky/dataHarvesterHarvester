@@ -2,6 +2,7 @@ import json
 import pytest
 from pathlib import Path
 
+from project.infrastructure.exceptions.cookies_exceptions import CookiesFileNotFoundError
 from project.infrastructure.playwright.CookiesManager import CookiesManager
 
 
@@ -88,7 +89,7 @@ def test_build_file_not_found():
     """Отсутствие файла → FileNotFoundError пробрасывается."""
     cm = CookiesManager(Path("/non/existent/file.txt"))
 
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(CookiesFileNotFoundError):
         cm.build()
 
 

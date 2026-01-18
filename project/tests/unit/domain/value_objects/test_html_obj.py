@@ -2,34 +2,9 @@ from urllib.parse import urlparse, parse_qs
 
 import pytest
 
-from project.domain.value_objects.UrlParts import HtmlContent, UrlParts
+from project.domain.value_objects.UrlParts import UrlParts
 
 
-# -----------------------------
-# HtmlContent
-# -----------------------------
-def test_create_valid_html_content():
-    html = "<html>" + "a" * 2001 + "</html>"
-    content = HtmlContent(html=html)
-    assert content.get_length() == len(html)
-
-
-def test_create_invalid_html_content():
-    html = "<html>" + "a" * 1000 + "</html>"
-    with pytest.raises(ValueError):
-        HtmlContent(html=html)
-
-
-def test_immutable_html_content():
-    html = "<html>" + "a" * 2001 + "</html>"
-    content = HtmlContent(html=html)
-    with pytest.raises(ValueError):
-        content.html = "<html>new content</html>"
-
-
-# -----------------------------
-# UrlParts
-# -----------------------------
 def test_from_url_basic():
     url = "https://example.com/catalog/items?sort=asc"
     parts = UrlParts.from_url(url)
