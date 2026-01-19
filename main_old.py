@@ -4,7 +4,7 @@ from pathlib import Path
 from project.application.retry_policy import RetryPolicy
 from project.application.use_cases.FirstPageLoadCategoryUseCase import FirstPageLoadCategoryUseCase
 from project.application.use_cases.RecoveryProcessedDataCategoryUseCase import RecoveryProcessedDataCategoryUseCase
-from project.application.use_cases.ScrapeCatalogUseCase import ScrapeCatalogUseCase
+from project.application.use_cases.ScrapeCatalogUseCase_old import ScrapeCatalogUseCase
 from project.application.use_cases.ScrapeAllProductsFromPageUseCase import ScrapeAllProductsFromPageUseCase
 
 from project.domain.services.ProcessedPagesService import ProcessedPagesService
@@ -26,19 +26,17 @@ logger = setup_logger(__name__)
 
 
 async def main():
-    url = "https://lemanapro.ru/catalogue/osveshchenie-na-kuhne"
-
+    url = "https://lemanapro.ru/catalogue/teplyy-vodyanoy-pol"
+    proxy = PROXY
     root = Path(__file__).resolve().parent
     path_cookies = root / "project" / "infrastructure" / "cookies.txt"
 
     cookie_provider = CookiesManager(path_cookies)
     cookies = cookie_provider.build()
-    proxy = PROXY
 
     detector = PageTypeDetector(CATEGORIES, SUBCATEGORIES)
     parts = UrlParts.from_url(url)
-    loader = PlaywrightPageLoader(proxy=proxy, cookies=cookies)
-    await loader.start()
+    loader = PlaywrightPageLoader(cookies=cookies)
 
     page_state_repo = PgProcessedPagesRepository()
     processed_pages = ProcessedPagesService(repository=page_state_repo)
@@ -46,9 +44,9 @@ async def main():
     extractor = ProductsExtractorFromHtml()
     mapper = ProductMapper()
 
-    paginator_factory = PaginatorFactory
-
     scraper_page_uc = ScrapeAllProductsFromPageUseCase(loader, extractor, mapper)
+
+    paginator_factory = PaginatorFactory
 
     first_page_load_category_uc = FirstPageLoadCategoryUseCase(loader=loader, paginator_factory=paginator_factory)
     recovery_processed_data_category_uc = RecoveryProcessedDataCategoryUseCase(paginator_factory)
@@ -56,21 +54,18 @@ async def main():
     if detector.detect(parts).name == "SUBCATEGORY":
         scraper = ScrapeCatalogUseCase(
             loader=loader,
-            extractor=extractor,
-            mapper=mapper,
             processed_pages=processed_pages,
             first_page_load_category_uc=first_page_load_category_uc,
             recovery_processed_data_category_uc=recovery_processed_data_category_uc,
             scraper_page_uc=scraper_page_uc,
             url_parts=UrlParts,
             page_category_total_products=PgCategoryTotalProductsRepository(),
-            retry_policy=RetryPolicy(),
             page_product_repository=PgProductsRepository(),
+            retry_policy=RetryPolicy(),
         )
 
         async for entities in scraper.execute(url):
-            for entity in entities:
-                logger.debug(f"{entity}  Обработанные страницы")
+            print(entities[:3])
 
 if __name__ == "__main__":
     asyncio.run(main())
