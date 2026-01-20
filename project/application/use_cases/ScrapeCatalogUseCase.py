@@ -7,12 +7,11 @@ from project.infrastructure.exceptions.db_exceptions import CategoryNotFoundErro
 from project.infrastructure.exceptions.parsing_errors import ParsingError
 from project.infrastructure.logging.logger_config import setup_logger
 
+logger = setup_logger(__name__)
+
 
 class MultipleSlugsError(Exception):
     pass
-
-
-logger = setup_logger(__name__)
 
 
 class ScrapeCatalogUseCase:
@@ -53,15 +52,8 @@ class ScrapeCatalogUseCase:
         try:
             all_pages, processed_pages = await self.processed_pages.get_loaded_pages(slug)
 
-            await self.loader.start()
 
-            if not processed_pages:
-                paginator = await self.first_page_load_category_uc.get_total_products(url)
-                total_products = paginator.total_products
-                slug = paginator.parts.segments[1]
-                await self.page_category_total_products.update_total_products(slug, total_products)
-            else:
-                paginator = self.recovery_processed_data_category_uc.assemble_paginator(url, all_pages, processed_pages)
+            paginator = self.recovery_processed_data_category_uc.assemble_paginator(url, all_pages, processed_pages)
 
             while True:
                 urls = []
@@ -124,24 +116,19 @@ class ScrapeCatalogUseCase:
                 yield results
 
             logger.info(f"Scraping completed: {slug}")
-            await self.loader.close()
 
         except CategoryNotFoundError:
             logger.warning(f"Category '{slug}' not found")
-            await self.loader.close()
             raise
 
         except DatabaseOperationError:
             logger.error(f"Database error while processing slug='{slug}'")
-            await self.loader.close()
             raise
 
         except DatabaseConnectionError:
             logger.error("The database is unavailable - I'll try again later.")
-            await self.loader.close()
             raise
 
         except ValueObjectProductValidationError:
             logger.error("Validation error")
-            await self.loader.close()
             raise

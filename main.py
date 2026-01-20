@@ -1,76 +1,17 @@
 import asyncio
-from pathlib import Path
 
-from project.application.retry_policy import RetryPolicy
-from project.application.use_cases.FirstPageLoadCategoryUseCase import FirstPageLoadCategoryUseCase
-from project.application.use_cases.RecoveryProcessedDataCategoryUseCase import RecoveryProcessedDataCategoryUseCase
-from project.application.use_cases.ScrapeCatalogUseCase import ScrapeCatalogUseCase
-from project.application.use_cases.ScrapeAllProductsFromPageUseCase import ScrapeAllProductsFromPageUseCase
-
-from project.domain.services.ProcessedPagesService import ProcessedPagesService
-from project.domain.services.PageTypeDetector import PageTypeDetector
-from project.domain.value_objects.UrlParts import UrlParts
-
-from project.config import CATEGORIES, SUBCATEGORIES, PROXY
-from project.infrastructure.factories.PaginatorFactory import PaginatorFactory
-from project.infrastructure.mappers.ProductMapper import ProductMapper
-from project.infrastructure.parsers.ProductsExtractorFromHtml import ProductsExtractorFromHtml
-from project.infrastructure.persistence.PgCategoryTotalProductsRepository import PgCategoryTotalProductsRepository
-from project.infrastructure.persistence.PgProcessedPagesRepository import PgProcessedPagesRepository
-from project.infrastructure.persistence.PgProductsRepository import PgProductsRepository
-from project.infrastructure.playwright.PlaywrightPageLoader import PlaywrightPageLoader
-from project.infrastructure.playwright.CookiesManager import CookiesManager
-from project.infrastructure.logging.logger_config import setup_logger
-
-logger = setup_logger(__name__)
+from project.application.ScraperApp import ScraperApp
+from project.application.bootstrap.InitialDataLoader import InitialDataLoader
+from project.config import SUBCATEGORIES
 
 
 async def main():
-    url = "https://lemanapro.ru/catalogue/osveshchenie-na-kuhne"
+    loader = InitialDataLoader()
+    await loader.run()
 
-    root = Path(__file__).resolve().parent
-    path_cookies = root / "project" / "infrastructure" / "cookies.txt"
+    app = ScraperApp()
+    await app.scrape_category(SUBCATEGORIES[0])
 
-    cookie_provider = CookiesManager(path_cookies)
-    cookies = cookie_provider.build()
-    proxy = PROXY
-
-    detector = PageTypeDetector(CATEGORIES, SUBCATEGORIES)
-    parts = UrlParts.from_url(url)
-    loader = PlaywrightPageLoader(proxy=proxy, cookies=cookies)
-    await loader.start()
-
-    page_state_repo = PgProcessedPagesRepository()
-    processed_pages = ProcessedPagesService(repository=page_state_repo)
-
-    extractor = ProductsExtractorFromHtml()
-    mapper = ProductMapper()
-
-    paginator_factory = PaginatorFactory
-
-    scraper_page_uc = ScrapeAllProductsFromPageUseCase(loader, extractor, mapper)
-
-    first_page_load_category_uc = FirstPageLoadCategoryUseCase(loader=loader, paginator_factory=paginator_factory)
-    recovery_processed_data_category_uc = RecoveryProcessedDataCategoryUseCase(paginator_factory)
-
-    if detector.detect(parts).name == "SUBCATEGORY":
-        scraper = ScrapeCatalogUseCase(
-            loader=loader,
-            extractor=extractor,
-            mapper=mapper,
-            processed_pages=processed_pages,
-            first_page_load_category_uc=first_page_load_category_uc,
-            recovery_processed_data_category_uc=recovery_processed_data_category_uc,
-            scraper_page_uc=scraper_page_uc,
-            url_parts=UrlParts,
-            page_category_total_products=PgCategoryTotalProductsRepository(),
-            retry_policy=RetryPolicy(),
-            page_product_repository=PgProductsRepository(),
-        )
-
-        async for entities in scraper.execute(url):
-            for entity in entities:
-                logger.debug(f"{entity}  Обработанные страницы")
 
 if __name__ == "__main__":
     asyncio.run(main())

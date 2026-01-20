@@ -70,7 +70,7 @@ class UrlParts:
 
 
 if __name__ == '__main__':
-    url = "https://lemanapro.ru/catalogue/sad/?page=5"
+    url = "https://lemanapro.ru/catalogue/osveshchenie-na-kuhne/?page=3"
 
     parts = UrlParts.from_url(url)
 

@@ -25,7 +25,7 @@ class PlaywrightPageLoader(IPageLoader):
         if self.cookies:
             await self._context.add_cookies(self.cookies)
 
-    async def load_dom(self, url: str, timeout: int = 90000) -> str:
+    async def load_dom(self, url: str, timeout: int = 60000) -> str:
         if not self._context:
             raise RuntimeError("PlaywrightPageLoader not started")
 
