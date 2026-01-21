@@ -1,7 +1,7 @@
 import asyncio
 from typing import List, Tuple
 
-from project.domain.services.ProcessedPagesService import ProcessedPagesService
+from project.domain.services.ProcessedPagesRepositoryService import ProcessedPagesRepositoryService
 from project.domain.value_objects.UrlParts import UrlParts
 from project.infrastructure.logging.logger_config import setup_logger
 
@@ -10,18 +10,18 @@ logger = setup_logger(__name__)
 
 class LoadedPagesCollector:
     """
-    Собирает информацию о загруженных страницах для списка UrlParts.
-    Работает конкурентно.
+    It collects information about loaded pages for the UrlParts list.
+    It operates concurrently.
     """
 
-    def __init__(self, processed_pages_service: ProcessedPagesService):
+    def __init__(self, processed_pages_service: ProcessedPagesRepositoryService):
         self.processed_pages = processed_pages_service
 
-    async def collect(self, url_parts_list: List[UrlParts]) -> Tuple[List[UrlParts], List[UrlParts]]:
+    async def collect(self, url_parts_list: List[UrlParts]) -> Tuple[List[Tuple[UrlParts, tuple]], List[UrlParts]]:
         """
-        Возвращает:
-        - urls_with_pages: список UrlParts, у которых есть загруженные страницы
-        - urls_without_pages: список UrlParts, у которых all_pages == 0
+        Returns:
+        - urls_with_pages: a list of UrlParts that have loaded pages
+        - urls_without_pages: a list of UrlParts where all_pages == 0
         """
 
         tasks = [

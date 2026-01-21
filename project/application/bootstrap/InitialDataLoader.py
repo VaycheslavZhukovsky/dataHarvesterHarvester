@@ -3,7 +3,7 @@ from pathlib import Path
 from project.application.CategoryTotalsUpdater import update_all_totals
 from project.application.HtmlAndProductsCollector import HtmlAndProductsCollector
 from project.application.LoadedPagesCollector import LoadedPagesCollector
-from project.domain.services.ProcessedPagesService import ProcessedPagesService
+from project.domain.services.ProcessedPagesRepositoryService import ProcessedPagesRepositoryService
 from project.domain.services.number_of_products_extractor import get_number_of_products
 from project.domain.value_objects.UrlParts import UrlParts
 
@@ -35,7 +35,7 @@ class InitialDataLoader:
         self.loader = PlaywrightPageLoader(proxy=PROXY, cookies=self.cookies)
 
         self.page_state_repo = PgProcessedPagesRepository()
-        self.processed_pages = ProcessedPagesService(repository=self.page_state_repo)
+        self.processed_pages = ProcessedPagesRepositoryService(repository=self.page_state_repo)
 
         self.paginator_factory = PaginatorFactory
 
@@ -45,8 +45,8 @@ class InitialDataLoader:
         ]
         self.url_parts_list = [UrlParts.from_url(url) for url in self.urls]
 
-    async def run(self, limit_pages: int = 5):
-        logger.info("InitialDataLoader: старт загрузки данных")
+    async def run(self, limit_pages: int):
+        logger.info("InitialDataLoader: data loading started")
 
         collector = LoadedPagesCollector(self.processed_pages)
         urls_with_pages, urls_without_pages = await collector.collect(self.url_parts_list)
@@ -56,8 +56,8 @@ class InitialDataLoader:
         collector_html = HtmlAndProductsCollector(
             loader=self.loader,
             paginator_factory=self.paginator_factory,
-            get_number_of_products=get_number_of_products,
-            max_workers=5
+            data_extractor=get_number_of_products,
+            max_workers=limit_pages
         )
 
         url_parts_list = urls_without_pages[:limit_pages]
@@ -74,4 +74,4 @@ class InitialDataLoader:
         await self.loader.close()
         await update_all_totals(page_category_total_products, paginators)
 
-        logger.info("InitialDataLoader: загрузка завершена")
+        logger.info("InitialDataLoader: Loading complete.")

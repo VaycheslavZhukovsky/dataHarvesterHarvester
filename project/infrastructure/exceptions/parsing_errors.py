@@ -21,3 +21,18 @@ class ProductsDataNotFoundError(ParsingError):
 class ProductsDataMalformedError(ParsingError):
     """Raised when 'productsData' array is not properly closed."""
     pass
+
+
+class JsonParsingError(ParsingError):
+    """Raised when JSON block is found but cannot be parsed."""
+    pass
+
+
+class OfferCountMissingError(ParsingError):
+    """Raised when 'offerCount' is missing in JSON-LD."""
+    pass
+
+
+class OfferCountInvalidError(ParsingError):
+    """Raised when 'offerCount' exists but has invalid type/value."""
+    pass

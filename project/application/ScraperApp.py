@@ -5,7 +5,7 @@ from project.application.LoadedPagesCollector import LoadedPagesCollector
 from project.application.use_cases.RecoveryProcessedDataCategoryUseCase import RecoveryProcessedDataCategoryUseCase
 from project.application.use_cases.scrape_all import scrape_all
 
-from project.domain.services.ProcessedPagesService import ProcessedPagesService
+from project.domain.services.ProcessedPagesRepositoryService import ProcessedPagesRepositoryService
 from project.domain.value_objects.UrlParts import UrlParts
 
 from project.config import PROXY
@@ -31,15 +31,14 @@ class ScraperApp:
         self.mapper = ProductMapper()
 
         self.page_state_repo = PgProcessedPagesRepository()
-        self.processed_pages = ProcessedPagesService(self.page_state_repo)
+        self.processed_pages = ProcessedPagesRepositoryService(self.page_state_repo)
 
         self.paginator_factory = PaginatorFactory
         self.recovery_uc = RecoveryProcessedDataCategoryUseCase(self.paginator_factory)
 
         self.products_repo = PgProductsRepository()
 
-    async def scrape_category(self, category_slug: str, limit_pages: int = 5):
-        await self.loader.start()
+    async def scrape_category(self, category_slug: str, limit_pages: int):
 
         url = f"https://lemanapro.ru/catalogue/{category_slug}"
         url_parts = UrlParts.from_url(url)
@@ -62,7 +61,10 @@ class ScraperApp:
             urls.append(u)
             paginator = paginator.mark_processed()
 
+        await self.loader.start()
+
         results = await scrape_all(urls, self.loader, self.extractor, self.mapper)
+
         await self.loader.close()
 
         flat = list(chain.from_iterable(results.values()))

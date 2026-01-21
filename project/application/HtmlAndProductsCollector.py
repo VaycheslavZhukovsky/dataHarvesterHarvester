@@ -10,20 +10,20 @@ logger = setup_logger(__name__)
 
 class HtmlAndProductsCollector:
     """
-    1. Конкурентно загружает HTML для списка UrlParts.
-    2. Параллельно считает total_products (CPU).
-    3. Создаёт paginator для каждого URL.
+    1. Competitively loads HTML for the list of UrlParts.
+    2. Calculates total_products in parallel (CPU).
+    3. Creates a paginator for each URL.
     """
 
-    def __init__(self, loader, paginator_factory, get_number_of_products, max_workers: int = 4):
+    def __init__(self, loader, paginator_factory, data_extractor, max_workers: int):
         self.loader = loader
         self.paginator_factory = paginator_factory
-        self.get_number_of_products = get_number_of_products
+        self.data_extractor = data_extractor
         self.executor = ProcessPoolExecutor(max_workers=max_workers)
 
     async def load_all_html(self, urls: List[UrlParts]) -> Dict[UrlParts, str]:
         """
-        Конкурентно загружает HTML.
+        Competitively loads HTML.
         """
         tasks = [
             asyncio.create_task(self.loader.load_dom(str(parts)))
@@ -36,12 +36,12 @@ class HtmlAndProductsCollector:
 
     async def compute_total_products(self, html_map: Dict[UrlParts, str]) -> Dict[UrlParts, int]:
         """
-        Параллельно считает total_products в ProcessPoolExecutor.
+        It simultaneously calculates total_products using ProcessPoolExecutor.
         """
         loop = asyncio.get_running_loop()
 
         tasks = [
-            loop.run_in_executor(self.executor, self.get_number_of_products, html)
+            loop.run_in_executor(self.executor, self.data_extractor, html)
             for html in html_map.values()
         ]
 
@@ -51,7 +51,7 @@ class HtmlAndProductsCollector:
 
     async def build_paginators(self, totals: Dict[UrlParts, int]):
         """
-        Создаёт paginator для каждого URL.
+        It creates a paginator for each URL.
         """
         paginators = {}
 
@@ -63,18 +63,18 @@ class HtmlAndProductsCollector:
 
     async def process(self, urls_without_pages: List[UrlParts]):
         """
-        Полный pipeline:
-        1. загрузка html
-        2. CPU обработка
-        3. создание paginator
+        The complete pipeline:
+        1. Loading the HTML
+        2. CPU processing
+        3. Creating the paginator
         """
-        logger.info("Загружаю HTML...")
+        logger.debug("Loading HTML...")
         html_map = await self.load_all_html(urls_without_pages)
 
-        logger.info("Считаю total_products...")
+        logger.debug("Count total_products...")
         totals = await self.compute_total_products(html_map)
 
-        logger.info("Создаю paginator...")
+        logger.debug("Creating a paginator....")
         paginators = await self.build_paginators(totals)
 
         return paginators, totals

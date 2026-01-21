@@ -15,8 +15,6 @@ async def fetch_pages(urls, loader, html_queue):
 
 
 def parse_and_map(html, extractor, mapper):
-    # если create_products_list_from_str выбросит JsonBlockNotFoundError,
-    # исключение поднимется в event loop
     products_raw = extractor.create_products_list_from_str(html)
     return mapper.asemble_entities(products_raw)
 
@@ -73,3 +71,5 @@ async def error_handler(error_queue, total_urls: int):
             raise ParsingError(
                 f"All {total_urls} pages failed parsing. "
             )
+
+
