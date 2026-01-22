@@ -29,9 +29,9 @@ class ProductMapper:
             )
 
         except ValidationError as exc:
-            logger.exception(f"Ошибка валидации продукта: {raw['productId']}")
+            logger.exception(f"Product validation error: {raw['productId']}")
             raise ValueObjectProductValidationError(
-                f"Ошибка маппинга Product: {exc}"
+                f"Mapping error Product: {exc}"
             ) from exc
 
     @staticmethod

@@ -23,13 +23,13 @@ class ColorFormatter(logging.Formatter):
 def setup_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
 
-    logger.setLevel(logging.INFO)   # <<< ИЗМЕНЕНО
+    logger.setLevel(logging.DEBUG)   # <<< ИЗМЕНЕНО
 
     # -----------------------------
     # Консольный обработчик
     # -----------------------------
     ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)       # <<< ИЗМЕНЕНО
+    ch.setLevel(logging.DEBUG)       # <<< ИЗМЕНЕНО
     ch.setFormatter(ColorFormatter())
 
     # -----------------------------

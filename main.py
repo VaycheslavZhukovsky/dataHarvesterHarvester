@@ -1,71 +1,37 @@
 import asyncio
-from pathlib import Path
 
-from project.application.retry_policy import RetryPolicy
-from project.application.use_cases.FirstPageLoadCategoryUseCase import FirstPageLoadCategoryUseCase
-from project.application.use_cases.RecoveryProcessedDataCategoryUseCase import RecoveryProcessedDataCategoryUseCase
-from project.application.use_cases.ScrapeCatalogUseCase import ScrapeCatalogUseCase
-from project.application.use_cases.ScrapeAllProductsFromPageUseCase import ScrapeAllProductsFromPageUseCase
-
-from project.domain.services.ProcessedPagesService import ProcessedPagesService
-from project.domain.services.PageTypeDetector import PageTypeDetector
-from project.domain.value_objects.UrlParts import UrlParts
-
-from project.config import CATEGORIES, SUBCATEGORIES
-from project.infrastructure.factories.PaginatorFactory import PaginatorFactory
-from project.infrastructure.mappers.ProductMapper import ProductMapper
-from project.infrastructure.parsers.ProductsExtractorFromHtml import ProductsExtractorFromHtml
-from project.infrastructure.persistence.PgCategoryTotalProductsRepository import PgCategoryTotalProductsRepository
-from project.infrastructure.persistence.PgProcessedPagesRepository import PgProcessedPagesRepository
-from project.infrastructure.persistence.PgProductsRepository import PgProductsRepository
-from project.infrastructure.playwright.PlaywrightPageLoader import PlaywrightPageLoader
-from project.infrastructure.playwright.CookiesManager import CookiesManager
+from project.application.ScraperApp import ScraperApp
+from project.application.bootstrap.InitialDataLoader import InitialDataLoader
+from project.config import SUBCATEGORIES
+from project.domain.exceptions.ProductError import ValueObjectProductValidationError
+from project.infrastructure.exceptions.db_exceptions import DatabaseError
+from project.infrastructure.exceptions.parsing_errors import ParsingError
 from project.infrastructure.logging.logger_config import setup_logger
 
 logger = setup_logger(__name__)
 
+LIMIT_PAGES = 5
+
 
 async def main():
-    url = "https://lemanapro.ru/catalogue/teplyy-vodyanoy-pol"
+    try:
+        loader = InitialDataLoader()
+        await loader.run(limit_pages=LIMIT_PAGES)
 
-    root = Path(__file__).resolve().parent
-    path_cookies = root / "project" / "infrastructure" / "cookies.txt"
+        app = ScraperApp()
+        await app.scrape_category(category_slug=SUBCATEGORIES[0], limit_pages=LIMIT_PAGES)
 
-    cookie_provider = CookiesManager(path_cookies)
-    cookies = cookie_provider.build()
+    except ParsingError:
+        logger.error("Parsing error.")
 
-    detector = PageTypeDetector(CATEGORIES, SUBCATEGORIES)
-    parts = UrlParts.from_url(url)
-    loader = PlaywrightPageLoader(cookies=cookies)
+    except DatabaseError:
+        logger.error(f"Database error while processing slug='{SUBCATEGORIES[0]}'")
+        raise
 
-    page_state_repo = PgProcessedPagesRepository()
-    processed_pages = ProcessedPagesService(repository=page_state_repo)
+    except ValueObjectProductValidationError:
+        logger.error("Validation error")
+        raise
 
-    extractor = ProductsExtractorFromHtml()
-    mapper = ProductMapper()
-
-    scraper_page_uc = ScrapeAllProductsFromPageUseCase(loader, extractor, mapper)
-
-    paginator_factory = PaginatorFactory
-
-    first_page_load_category_uc = FirstPageLoadCategoryUseCase(loader=loader, paginator_factory=paginator_factory)
-    recovery_processed_data_category_uc = RecoveryProcessedDataCategoryUseCase(paginator_factory)
-
-    if detector.detect(parts).name == "SUBCATEGORY":
-        scraper = ScrapeCatalogUseCase(
-            loader=loader,
-            processed_pages=processed_pages,
-            first_page_load_category_uc=first_page_load_category_uc,
-            recovery_processed_data_category_uc=recovery_processed_data_category_uc,
-            scraper_page_uc=scraper_page_uc,
-            url_parts=UrlParts,
-            page_category_total_products=PgCategoryTotalProductsRepository(),
-            page_product_repository=PgProductsRepository(),
-            retry_policy=RetryPolicy(),
-        )
-
-        async for entities in scraper.execute(url):
-            print(entities[:3])
 
 if __name__ == "__main__":
     asyncio.run(main())

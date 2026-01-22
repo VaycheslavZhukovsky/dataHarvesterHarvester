@@ -25,7 +25,7 @@ class Price(BaseModel):
     additional_uom: Optional[str]
     additional_uom_rus: Optional[str]
     discount_percent: Optional[float]
-    step: int
+    step: Optional[float]
 
     model_config = {
         "frozen": True

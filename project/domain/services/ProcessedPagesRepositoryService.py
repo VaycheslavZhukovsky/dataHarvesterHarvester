@@ -6,7 +6,7 @@ from project.infrastructure.logging.logger_config import setup_logger
 logger = setup_logger(__name__)
 
 
-class ProcessedPagesService:
+class ProcessedPagesRepositoryService:
     """
     A domain service that manages the state of loaded pages.
     """
