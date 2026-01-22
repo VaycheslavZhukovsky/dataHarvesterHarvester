@@ -1,0 +1,4 @@
+json5==0.13.0
+pydantic==2.12.5
+pytest==9.0.2
+SQLAlchemy==2.0.46

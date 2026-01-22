@@ -15,8 +15,8 @@ LIMIT_PAGES = 5
 
 async def main():
     try:
-        # loader = InitialDataLoader()
-        # await loader.run(limit_pages=LIMIT_PAGES)
+        loader = InitialDataLoader()
+        await loader.run(limit_pages=LIMIT_PAGES)
 
         app = ScraperApp()
         await app.scrape_category(category_slug=SUBCATEGORIES[0], limit_pages=LIMIT_PAGES)

@@ -88,7 +88,7 @@ def _get_database_url() -> str:
     """
     return os.getenv(
         "DATABASE_URL",
-        "postgresql+asyncpg://parser:parser@localhost:4444/parser_db",
+        "postgresql+asyncpg://parser:parser@localhost:5432/parser",
     )
 
 
