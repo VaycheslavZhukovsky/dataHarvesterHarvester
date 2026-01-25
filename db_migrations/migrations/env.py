@@ -11,8 +11,11 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from alembic import context
 
-config = context.get_context().config
 
+def get_config():
+    return context.config
+
+config = get_config()
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
@@ -20,7 +23,6 @@ if config.config_file_name is not None:
 BASE_DIR = Path(__file__).resolve().parents[2]
 if str(BASE_DIR) not in sys.path:
     sys.path.append(str(BASE_DIR))
-
 
 PARSER_DIR = BASE_DIR / "parser"
 if str(PARSER_DIR) not in sys.path:
@@ -32,16 +34,12 @@ target_metadata = metadata
 
 
 def get_url() -> str:
-    """
-    Берём URL из alembic.ini.
-    """
+    config = get_config()
     return config.get_main_option("sqlalchemy.url")
 
 
 def run_migrations_offline() -> None:
-    """
-    Запуск миграций в offline-режиме (генерация SQL без подключения).
-    """
+    config = get_config()
     url = get_url()
     context.configure(
         url=url,
@@ -55,9 +53,7 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    """
-    Запуск миграций в online-режиме (с подключением к БД).
-    """
+    config = get_config()
     context.configure(
         connection=connection,
         target_metadata=target_metadata,
@@ -70,9 +66,6 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_async_migrations() -> None:
-    """
-    Асинхронный запуск миграций.
-    """
     connectable: AsyncEngine = create_async_engine(
         get_url(),
         poolclass=pool.NullPool,
@@ -85,9 +78,6 @@ async def run_async_migrations() -> None:
 
 
 def run_migrations_online() -> None:
-    """
-    Определяем, offline или online режим.
-    """
     if context.is_offline_mode():
         run_migrations_offline()
     else:
