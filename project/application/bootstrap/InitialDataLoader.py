@@ -25,10 +25,10 @@ class InitialDataLoader:
     Runs once when the application starts.
     """
 
-    def __init__(self):
+    def __init__(self, subdomain: str = ""):
         root = Path(__file__).resolve().parent.parent.parent
         self.path_cookies = root / "infrastructure" / "cookies.txt"
-
+        self.subdomain = subdomain
         self.cookie_provider = CookiesManager(self.path_cookies)
         self.cookies = self.cookie_provider.build()
 
@@ -40,7 +40,7 @@ class InitialDataLoader:
         self.paginator_factory = PaginatorFactory
 
         self.urls = [
-            f"https://lemanapro.ru/catalogue/{url}"
+            f"https://{self.subdomain}lemanapro.ru/catalogue/{url}"
             for url in SUBCATEGORIES
         ]
         self.url_parts_list = [UrlParts.from_url(url) for url in self.urls]

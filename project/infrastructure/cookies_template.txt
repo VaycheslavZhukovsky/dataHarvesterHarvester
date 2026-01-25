@@ -1,27 +1,16 @@
-[
+{
+  "cookies": [
     {
-      "domain": ".lemanapro.ru",
-      "expirationDate": 1769054943,
-      "hostOnly": false,
+      "domain": "lemanapro.ru",
+      "expirationDate": 1803615370,
+      "hostOnly": true,
       "httpOnly": false,
-      "name": "qrator_jsr",
-      "path": "/",
-      "sameSite": "no_restriction",
-      "secure": true,
+      "name": "uid_experiment",
+      "path": "/catalogue",
+      "sameSite": "unspecified",
+      "secure": false,
       "session": false,
-      "value": "v2.0.1769054643.623.be6fa221JNcciqnE|iKs5VeiXAdQ9r5Dv|jLqd428icKLIFPaU48NdcaABKIHWvkMTVqzf8P/ObNISu35ikvukUuceoLUUuLhVEJndqBeS5OgWhfsFJuq1ig==-LqhxwkErPFABuhbumcOGAsg2Rk8=-00"
-    },
-    {
-      "domain": ".lemanapro.ru",
-      "expirationDate": 1769055645,
-      "hostOnly": false,
-      "httpOnly": true,
-      "name": "qrator_jsid2",
-      "path": "/",
-      "sameSite": "no_restriction",
-      "secure": true,
-      "session": false,
-      "value": "v2.0.1769054643.623.be6fa221JNcciqnE|YmVAQJhWbfNEg3cc|8pHGtqF07y6hknE6o82cIJbx+5OPcdXfLBo1xd5wveDSophCPT+XGpjRPKEeFK4aWH4zZL5gRSdKrUDqdB2BpvTt0jKRAAmVU4wZrosAhpEjf6x1WIqapbHJP5XSnlzk1cW/uWZ6Hg8UvR+3I0S3mPSr3RZ3kBYJI97qce9K+o4=-ojzkAmsKC3w/lmtxKBVI3Jk1A9k="
+      "value": "622a2df3-2525-4d0f-ac4b-a4852963916d"
     },
     {
       "domain": ".lemanapro.ru",
@@ -49,7 +38,7 @@
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1800590649,
+      "expirationDate": 1800860126,
       "hostOnly": false,
       "httpOnly": false,
       "name": "lang",
@@ -73,7 +62,7 @@
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1800590649,
+      "expirationDate": 1800860126,
       "hostOnly": false,
       "httpOnly": false,
       "name": "_regionID",
@@ -85,7 +74,7 @@
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1800590649,
+      "expirationDate": 1800860126,
       "hostOnly": false,
       "httpOnly": false,
       "name": "_userRegion",
@@ -109,7 +98,7 @@
     },
     {
       "domain": ".dmpkit.lemanapro.ru",
-      "expirationDate": 1800590651,
+      "expirationDate": 1800860127.269,
       "hostOnly": false,
       "httpOnly": false,
       "name": "dmpuid",
@@ -121,7 +110,7 @@
     },
     {
       "domain": ".dmpkit.lemanapro.ru",
-      "expirationDate": 1800590651,
+      "expirationDate": 1800860127.528,
       "hostOnly": false,
       "httpOnly": false,
       "name": "dmpuid-legacy",
@@ -142,42 +131,6 @@
       "secure": false,
       "session": false,
       "value": "51948d54-f065-4586-84b4-4279e6bc5803"
-    },
-    {
-      "domain": "lemanapro.ru",
-      "expirationDate": 1769141052,
-      "hostOnly": true,
-      "httpOnly": false,
-      "name": "_mobidriven_cmf",
-      "path": "/",
-      "sameSite": "unspecified",
-      "secure": false,
-      "session": false,
-      "value": "1"
-    },
-    {
-      "domain": "lemanapro.ru",
-      "expirationDate": 1769141052,
-      "hostOnly": true,
-      "httpOnly": false,
-      "name": "_q-bid_cmf",
-      "path": "/",
-      "sameSite": "unspecified",
-      "secure": false,
-      "session": false,
-      "value": "1"
-    },
-    {
-      "domain": "lemanapro.ru",
-      "expirationDate": 1769141052,
-      "hostOnly": true,
-      "httpOnly": false,
-      "name": "_linkssp_cmf",
-      "path": "/",
-      "sameSite": "unspecified",
-      "secure": false,
-      "session": false,
-      "value": "1"
     },
     {
       "domain": ".lemanapro.ru",
@@ -229,7 +182,7 @@
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1800590657,
+      "expirationDate": 1800860129,
       "hostOnly": false,
       "httpOnly": false,
       "name": "kameleoonVisitorCode",
@@ -253,19 +206,7 @@
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1769141057,
-      "hostOnly": false,
-      "httpOnly": false,
-      "name": "_newCartSync",
-      "path": "/",
-      "sameSite": "unspecified",
-      "secure": false,
-      "session": false,
-      "value": "true"
-    },
-    {
-      "domain": ".lemanapro.ru",
-      "expirationDate": 1803614657,
+      "expirationDate": 1803880374.93,
       "hostOnly": false,
       "httpOnly": false,
       "name": "adrdel",
@@ -273,11 +214,11 @@
       "sameSite": "no_restriction",
       "secure": true,
       "session": false,
-      "value": "1769054657350"
+      "value": "1769320374930"
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1803614657,
+      "expirationDate": 1803884128.152,
       "hostOnly": false,
       "httpOnly": false,
       "name": "adrcid",
@@ -289,7 +230,7 @@
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1797825858,
+      "expirationDate": 1798095329,
       "hostOnly": false,
       "httpOnly": false,
       "name": "tmr_lvid",
@@ -301,7 +242,7 @@
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1797825858,
+      "expirationDate": 1798095329,
       "hostOnly": false,
       "httpOnly": false,
       "name": "tmr_lvidTS",
@@ -337,7 +278,7 @@
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1803614658,
+      "expirationDate": 1803880371.048,
       "hostOnly": false,
       "httpOnly": false,
       "name": "acs_3",
@@ -345,26 +286,62 @@
       "sameSite": "no_restriction",
       "secure": true,
       "session": false,
-      "value": "%7B%22hash%22%3A%221aa3f9523ee6c2690cb34fc702d4143056487c0d%22%2C%22nst%22%3A1769141058846%2C%22sl%22%3A%7B%22224%22%3A1769054658846%2C%221228%22%3A1769054658846%7D%7D"
+      "value": "%7B%22hash%22%3A%221aa3f9523ee6c2690cb34fc702d4143056487c0d%22%2C%22nst%22%3A1769406771047%2C%22sl%22%3A%7B%22224%22%3A1769320371047%2C%221228%22%3A1769320371047%7D%7D"
     },
     {
       "domain": "lemanapro.ru",
-      "expirationDate": 1769141060,
+      "expirationDate": 1769925179.855,
       "hostOnly": true,
       "httpOnly": false,
-      "name": "tmr_detect",
+      "name": "domain_sid",
       "path": "/",
       "sameSite": "unspecified",
       "secure": false,
       "session": false,
-      "value": "0%7C1769054660887"
+      "value": "ZtJdyDM18L-wMSlhqNziO%3A1769320379855"
     },
     {
       "domain": ".lemanapro.ru",
-      "expirationDate": 1769126661,
+      "expirationDate": 1800612321,
       "hostOnly": false,
       "httpOnly": false,
-      "name": "_ym_isad",
+      "name": "uid_experiment",
+      "path": "/",
+      "sameSite": "unspecified",
+      "secure": false,
+      "session": false,
+      "value": "3d34ccd0b8e481c9ed5df54c195b97d0"
+    },
+    {
+      "domain": "lemanapro.ru",
+      "expirationDate": 1769062698,
+      "hostOnly": true,
+      "httpOnly": false,
+      "name": "stretch-banner-autohide",
+      "path": "/",
+      "sameSite": "lax",
+      "secure": false,
+      "session": false,
+      "value": "2026-01-22T04%3A18%3A18.650Z"
+    },
+    {
+      "domain": "lemanapro.ru",
+      "expirationDate": 1769228298,
+      "hostOnly": true,
+      "httpOnly": false,
+      "name": "stretch-banner-count",
+      "path": "/",
+      "sameSite": "lax",
+      "secure": false,
+      "session": false,
+      "value": "4"
+    },
+    {
+      "domain": "lemanapro.ru",
+      "expirationDate": 1769406769,
+      "hostOnly": true,
+      "httpOnly": false,
+      "name": "_mobidriven_cmf",
       "path": "/",
       "sameSite": "unspecified",
       "secure": false,
@@ -373,15 +350,99 @@
     },
     {
       "domain": "lemanapro.ru",
-      "expirationDate": 1769659470,
+      "expirationDate": 1769406769,
       "hostOnly": true,
       "httpOnly": false,
-      "name": "domain_sid",
+      "name": "_q-bid_cmf",
       "path": "/",
       "sameSite": "unspecified",
       "secure": false,
       "session": false,
-      "value": "ZtJdyDM18L-wMSlhqNziO%3A1769054670123"
+      "value": "1"
+    },
+    {
+      "domain": "lemanapro.ru",
+      "expirationDate": 1769406846,
+      "hostOnly": true,
+      "httpOnly": false,
+      "name": "_linkssp_cmf",
+      "path": "/",
+      "sameSite": "unspecified",
+      "secure": false,
+      "session": false,
+      "value": "2"
+    },
+    {
+      "domain": ".lemanapro.ru",
+      "expirationDate": 1769406774.829,
+      "hostOnly": false,
+      "httpOnly": false,
+      "name": "_newCartSync",
+      "path": "/",
+      "sameSite": "unspecified",
+      "secure": false,
+      "session": false,
+      "value": "true"
+    },
+    {
+      "domain": ".lemanapro.ru",
+      "expirationDate": 1769392377,
+      "hostOnly": false,
+      "httpOnly": false,
+      "name": "_ym_isad",
+      "path": "/",
+      "sameSite": "unspecified",
+      "secure": false,
+      "session": false,
+      "value": "2"
+    },
+    {
+      "domain": "lemanapro.ru",
+      "expirationDate": 1769410531,
+      "hostOnly": true,
+      "httpOnly": false,
+      "name": "tmr_detect",
+      "path": "/",
+      "sameSite": "unspecified",
+      "secure": false,
+      "session": false,
+      "value": "0%7C1769324131412"
+    },
+    {
+      "domain": ".lemanapro.ru",
+      "expirationDate": 1769322737.303,
+      "hostOnly": false,
+      "httpOnly": false,
+      "name": "qrator_jsr",
+      "path": "/",
+      "sameSite": "no_restriction",
+      "secure": true,
+      "session": false,
+      "value": "v2.0.1769322437.705.be6fa221fQeI1Ly5|9HhuB1ZgXbI1OKSO|kFSOOBM5Nua/ENLJchZHWQ2COcz1saeGYUVlVfOZtT388Xz0Nw+XWbrnuCkOnelIQULpQ7rSYGWYSXbE5ALPJw==-z5u7pgOFYpPhA/xmybAB8uU4mlU=-00"
+    },
+    {
+      "domain": ".lemanapro.ru",
+      "expirationDate": 1769325124.041,
+      "hostOnly": false,
+      "httpOnly": true,
+      "name": "qrator_jsid2",
+      "path": "/",
+      "sameSite": "no_restriction",
+      "secure": true,
+      "session": false,
+      "value": "v2.0.1769322437.705.be6fa221fQeI1Ly5|HvKGIupKx3dcDFyd|XmykVrM/9MP87guUq/Kg9GrTUYLX5DkISJvbj1aZqPlbsubbkApsOd3WuwQOtuYRLNuU4KtmAagsrOvfW9NeIBYEl82r8rkqcdYoa7J+eDdZZr2YawenAoYWzvWiD+Sg9+giAOuQzTfZ1iMQ7isSJcGXjkZiynXokGlQpf1Bc18=-qOsVW3cJiWdduqW3/ycQLXXqYok="
+    },
+    {
+      "domain": ".lemanapro.ru",
+      "expirationDate": 1769325926,
+      "hostOnly": false,
+      "httpOnly": false,
+      "name": "loyaltyTypePRO",
+      "path": "/",
+      "sameSite": "unspecified",
+      "secure": false,
+      "session": false,
+      "value": ""
     }
   ]
 }

@@ -13,7 +13,7 @@ class CookiesManager(ICookieProvider):
     """Creates a list of cookies from cookies.txt suitable for Playwright."""
 
     def __init__(self, file_path: Path):
-        self.domain = "lemanapro.ru"
+        self.domain = "krasnodar.lemanapro.ru"
         self.path = "/"
         self.cookies: list = []
         self.file_path = file_path

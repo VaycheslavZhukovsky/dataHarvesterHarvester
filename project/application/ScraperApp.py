@@ -8,7 +8,6 @@ from project.application.use_cases.scrape_all import scrape_all
 from project.domain.services.ProcessedPagesRepositoryService import ProcessedPagesRepositoryService
 from project.domain.value_objects.UrlParts import UrlParts
 
-from project.config import PROXY
 from project.infrastructure.factories.PaginatorFactory import PaginatorFactory
 from project.infrastructure.mappers.ProductMapper import ProductMapper
 from project.infrastructure.parsers.ProductsExtractorFromHtml import ProductsExtractorFromHtml
@@ -19,14 +18,15 @@ from project.infrastructure.playwright.CookiesManager import CookiesManager
 
 
 class ScraperApp:
-    def __init__(self):
+    def __init__(self, subdomain: str = ""):
         root = Path(__file__).resolve().parent.parent
         path_cookies = root / "infrastructure" / "cookies.txt"
+        self.subdomain = subdomain
 
         cookie_provider = CookiesManager(path_cookies)
         cookies = cookie_provider.build()
 
-        self.loader = PlaywrightPageLoader(proxy=PROXY, cookies=cookies)
+        self.loader = PlaywrightPageLoader(cookies=cookies)
         self.extractor = ProductsExtractorFromHtml()
         self.mapper = ProductMapper()
 
@@ -40,7 +40,7 @@ class ScraperApp:
 
     async def scrape_category(self, category_slug: str, limit_pages: int):
 
-        url = f"https://lemanapro.ru/catalogue/{category_slug}"
+        url = f"https://{self.subdomain}lemanapro.ru/catalogue/{category_slug}"
         url_parts = UrlParts.from_url(url)
 
         collector = LoadedPagesCollector(self.processed_pages)

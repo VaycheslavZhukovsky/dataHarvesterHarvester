@@ -19,13 +19,10 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-prompt.txt
-
 project/infrastructure/cache
 project/cache_back
 project/profile
 profile
-project/infrastructure/cookies.txt
 project/config.py
 
 project/infrastructure/playwright/profile
