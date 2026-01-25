@@ -10,14 +10,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from alembic import context
-
-
-def get_config():
-    return context.config
-
-config = get_config()
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+from alembic.config import Config
 
 
 BASE_DIR = Path(__file__).resolve().parents[2]
@@ -28,24 +21,37 @@ PARSER_DIR = BASE_DIR / "parser"
 if str(PARSER_DIR) not in sys.path:
     sys.path.append(str(PARSER_DIR))
 
+
+ALEMBIC_INI = BASE_DIR / "alembic.ini"
+config = Config(str(ALEMBIC_INI))
+
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
+
+
+
 from project.infrastructure.persistence.db import metadata  # type: ignore
 
 target_metadata = metadata
 
 
+
 def get_url() -> str:
-    config = get_config()
+    """Берём URL из alembic.ini."""
     return config.get_main_option("sqlalchemy.url")
 
 
 def run_migrations_offline() -> None:
-    config = get_config()
+    """Запуск миграций без подключения к БД."""
     url = get_url()
+
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        compare_type=True,
+        compare_server_default=True,
     )
 
     with context.begin_transaction():
@@ -53,7 +59,7 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    config = get_config()
+    """Синхронный запуск миграций (внутри async)."""
     context.configure(
         connection=connection,
         target_metadata=target_metadata,
@@ -66,6 +72,7 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_async_migrations() -> None:
+    """Асинхронный запуск миграций."""
     connectable: AsyncEngine = create_async_engine(
         get_url(),
         poolclass=pool.NullPool,
@@ -77,11 +84,11 @@ async def run_async_migrations() -> None:
     await connectable.dispose()
 
 
-def run_migrations_online() -> None:
+def run_migrations() -> None:
     if context.is_offline_mode():
         run_migrations_offline()
     else:
         asyncio.run(run_async_migrations())
 
 
-run_migrations_online()
+run_migrations()
