@@ -12,7 +12,6 @@ logger = setup_logger(__name__)
 
 LIMIT_PAGES = 5
 
-
 async def main():
     subdomain = "krasnodar."
     try:

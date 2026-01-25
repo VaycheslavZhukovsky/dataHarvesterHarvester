@@ -23,7 +23,6 @@ project/infrastructure/cache
 project/cache_back
 project/profile
 profile
-project/config.py
 
 project/infrastructure/playwright/profile
 project/tests/data

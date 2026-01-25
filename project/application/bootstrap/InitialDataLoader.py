@@ -7,13 +7,13 @@ from project.domain.services.ProcessedPagesRepositoryService import ProcessedPag
 from project.domain.services.number_of_products_extractor import get_number_of_products
 from project.domain.value_objects.UrlParts import UrlParts
 
-from project.config import PROXY, SUBCATEGORIES
 from project.infrastructure.factories.PaginatorFactory import PaginatorFactory
 from project.infrastructure.persistence.PgCategoryTotalProductsRepository import PgCategoryTotalProductsRepository
 from project.infrastructure.persistence.PgProcessedPagesRepository import PgProcessedPagesRepository
 from project.infrastructure.playwright.PlaywrightPageLoader import PlaywrightPageLoader
 from project.infrastructure.playwright.CookiesManager import CookiesManager
 from project.infrastructure.logging.logger_config import setup_logger
+from test import SUBCATEGORIES
 
 logger = setup_logger(__name__)
 
@@ -32,7 +32,7 @@ class InitialDataLoader:
         self.cookie_provider = CookiesManager(self.path_cookies)
         self.cookies = self.cookie_provider.build()
 
-        self.loader = PlaywrightPageLoader(proxy=PROXY, cookies=self.cookies)
+        self.loader = PlaywrightPageLoader(cookies=self.cookies)
 
         self.page_state_repo = PgProcessedPagesRepository()
         self.processed_pages = ProcessedPagesRepositoryService(repository=self.page_state_repo)
