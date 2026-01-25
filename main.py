@@ -12,13 +12,13 @@ logger = setup_logger(__name__)
 
 LIMIT_PAGES = 5
 
-
 async def main():
+    subdomain = "krasnodar."
     try:
-        loader = InitialDataLoader()
+        loader = InitialDataLoader(subdomain=subdomain)
         await loader.run(limit_pages=LIMIT_PAGES)
 
-        app = ScraperApp()
+        app = ScraperApp(subdomain=subdomain)
         await app.scrape_category(category_slug=SUBCATEGORIES[0], limit_pages=LIMIT_PAGES)
 
     except ParsingError:
